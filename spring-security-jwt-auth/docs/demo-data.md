@@ -18,3 +18,4 @@ Recommended flow:
 2. Run the SQL script against the database.
 3. Use the demo accounts to test role-based endpoints in Swagger or Postman.
 
+You can safely rerun the script. It updates existing demo users as well, which is helpful if you need to refresh passwords or fix previous seed data.
