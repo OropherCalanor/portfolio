@@ -1,0 +1,163 @@
+{
+  "info": {
+    "name": "Spring Employee Management API",
+    "_postman_id": "9f4c4dd8-b0d4-4ee7-85f9-5f2aa5a772f0",
+    "description": "Starter Postman collection for the Spring Employee Management API portfolio project.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1"
+    },
+    {
+      "key": "departmentId",
+      "value": "1"
+    },
+    {
+      "key": "positionId",
+      "value": "1"
+    },
+    {
+      "key": "employeeId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Departments",
+      "item": [
+        {
+          "name": "Create Department",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Engineering\",\n  \"description\": \"Backend and frontend engineering team\"\n}"
+            },
+            "url": "{{baseUrl}}/departments"
+          }
+        },
+        {
+          "name": "Get All Departments",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/departments"
+          }
+        },
+        {
+          "name": "Update Department",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Engineering\",\n  \"description\": \"Platform and application engineering team\"\n}"
+            },
+            "url": "{{baseUrl}}/departments/{{departmentId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Positions",
+      "item": [
+        {
+          "name": "Create Position",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Software Engineer\",\n  \"description\": \"Designs and builds software solutions\"\n}"
+            },
+            "url": "{{baseUrl}}/positions"
+          }
+        },
+        {
+          "name": "Get All Positions",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/positions"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employees",
+      "item": [
+        {
+          "name": "Create Employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ada\",\n  \"lastName\": \"Lovelace\",\n  \"email\": \"ada.lovelace@example.com\",\n  \"phoneNumber\": \"+90-555-000-0000\",\n  \"salary\": 85000,\n  \"hireDate\": \"2024-01-15\",\n  \"employmentStatus\": \"ACTIVE\",\n  \"departmentId\": {{departmentId}},\n  \"positionId\": {{positionId}}\n}"
+            },
+            "url": "{{baseUrl}}/employees"
+          }
+        },
+        {
+          "name": "Get Employees",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/employees?page=0&size=10&sortBy=lastName&sortDir=asc"
+          }
+        },
+        {
+          "name": "Get Employee By Id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/employees/{{employeeId}}"
+          }
+        },
+        {
+          "name": "Update Employee",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ada\",\n  \"lastName\": \"Lovelace\",\n  \"email\": \"ada.lovelace@example.com\",\n  \"phoneNumber\": \"+90-555-111-1111\",\n  \"salary\": 92000,\n  \"hireDate\": \"2024-01-15\",\n  \"employmentStatus\": \"ACTIVE\",\n  \"departmentId\": {{departmentId}},\n  \"positionId\": {{positionId}}\n}"
+            },
+            "url": "{{baseUrl}}/employees/{{employeeId}}"
+          }
+        },
+        {
+          "name": "Delete Employee",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/employees/{{employeeId}}"
+          }
+        }
+      ]
+    }
+  ]
+}

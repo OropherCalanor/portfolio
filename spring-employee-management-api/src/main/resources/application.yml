@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: spring-employee-management-api
+  profiles:
+    default: dev
+
+server:
+  port: 8080
+
