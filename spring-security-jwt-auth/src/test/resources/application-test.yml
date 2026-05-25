@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:jwt-auth-test-db;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    open-in-view: false
+  sql:
+    init:
+      mode: never
+
+jwt:
+  secret: VGhpcy1pcy1hLXRlc3Qtc2VjcmV0LXZhbHVlLXdpdGgtZW5vdWdoLWxlbmd0aA==
+  access-token-expiration-ms: 900000
+  refresh-token-expiration-ms: 604800000
