@@ -14,7 +14,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {project.status.replace('-', ' ')}
         </span>
         <span className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-muted)]">
-          {project.category}
+          {project.tier} · {project.category}
         </span>
       </div>
 

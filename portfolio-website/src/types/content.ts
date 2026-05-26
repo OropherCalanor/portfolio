@@ -1,5 +1,6 @@
-export type ProjectCategory = 'backend' | 'fullstack' | 'frontend' | 'ai'
+export type ProjectCategory = 'backend' | 'fullstack' | 'frontend' | 'ai' | 'devops' | 'tools'
 export type ProjectStatus = 'planned' | 'in-progress' | 'completed'
+export type ProjectTier = 'flagship' | 'proof' | 'mini'
 
 export type Project = {
   slug: string
@@ -8,6 +9,7 @@ export type Project = {
   description: string
   stack: string[]
   category: ProjectCategory
+  tier: ProjectTier
   githubUrl: string
   liveUrl?: string
   featured: boolean
@@ -19,6 +21,10 @@ export type Project = {
   architecture: string[]
   databaseDesign: string[]
   learned: string[]
+  verification?: string[]
+  repositoryHighlights?: string[]
+  nextMilestones?: string[]
+  buildFocus?: string
   futureImprovements: string[]
 }
 
