@@ -6,6 +6,10 @@ export const skillGroups: SkillGroup[] = [
     items: ['Java 21', 'Spring Boot', 'Spring Security', 'Spring Data JPA', 'Hibernate', 'JWT'],
   },
   {
+    title: 'Python And Automation',
+    items: ['Python', 'Automation scripts', 'CLI tooling', 'Data parsing', 'FastAPI exploration'],
+  },
+  {
     title: 'Frontend',
     items: ['React', 'TypeScript', 'Tailwind CSS', 'React Router', 'Responsive UI'],
   },

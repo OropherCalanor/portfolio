@@ -693,6 +693,68 @@ export const projects: Project[] = [
     repositoryHighlights: [],
     futureImprovements: ['Integrate patterns into larger systems'],
   },
+  {
+    slug: 'python-automation-toolkit',
+    name: 'Python Automation Toolkit',
+    summary: 'A focused Python repository for CLI utilities, file automation, and developer workflow helpers.',
+    description:
+      'This planned proof project adds Python to the portfolio in a practical way through automation tasks, small command-line tools, and productivity-oriented scripts.',
+    stack: ['Python', 'CLI tooling', 'Automation', 'File processing'],
+    category: 'tools',
+    tier: 'proof',
+    githubUrl: 'https://github.com/OropherCalanor',
+    featured: false,
+    status: 'planned',
+    whatItProves: ['Python scripting', 'Automation mindset', 'Developer tooling quality'],
+    problem: 'I want Python in the portfolio as a useful engineering tool, not as a random detour from my main stack.',
+    solution:
+      'The planned solution is a compact Python repo with small but real utilities for file handling, content generation helpers, and workflow automation.',
+    keyFeatures: ['CLI commands', 'Batch file operations', 'Config-driven scripts', 'Documentation for real usage'],
+    architecture: ['Small Python package or scripts directory organized for clarity and reuse'],
+    databaseDesign: ['Not applicable'],
+    learned: [],
+    buildFocus:
+      'This project is intended to make Python visible as a practical supporting skill for automation and tooling around the main portfolio ecosystem.',
+    nextMilestones: [
+      'Pick three useful automation tasks with real portfolio value',
+      'Organize them into a clean CLI-friendly structure',
+      'Add usage examples, screenshots, and recruiter-friendly documentation',
+    ],
+    verification: [],
+    repositoryHighlights: [],
+    futureImprovements: ['Expand into reusable developer utilities'],
+  },
+  {
+    slug: 'fastapi-job-tools',
+    name: 'FastAPI Job Tools',
+    summary: 'A lightweight Python backend experiment for job-search utilities, parsing, and small productivity workflows.',
+    description:
+      'This planned project uses FastAPI to explore Python backend ergonomics while supporting the broader career and application-tracking ecosystem.',
+    stack: ['Python', 'FastAPI', 'Pydantic', 'SQLite or PostgreSQL'],
+    category: 'backend',
+    tier: 'mini',
+    githubUrl: 'https://github.com/OropherCalanor',
+    featured: false,
+    status: 'planned',
+    whatItProves: ['Python backend fundamentals', 'API ergonomics', 'Cross-stack adaptability'],
+    problem: 'I want one small Python API project that proves I can adapt backend principles outside the Java ecosystem too.',
+    solution:
+      'The planned solution is a compact FastAPI service for job-search support tasks such as note storage, keyword extraction helpers, or simple application utilities.',
+    keyFeatures: ['Typed request validation', 'Simple CRUD or parsing endpoints', 'API docs', 'Compact deployment story'],
+    architecture: ['Small Python API organized around routers, schemas, services, and utilities'],
+    databaseDesign: ['Lightweight schema for jobs, notes, or parsed metadata'],
+    learned: [],
+    buildFocus:
+      'This project is meant to show that my backend thinking transfers across ecosystems, with Python used for smaller, fast-moving service experiments.',
+    nextMilestones: [
+      'Pick a narrow job-tools use case',
+      'Implement the API with typed schemas and clear route boundaries',
+      'Document where Python fits relative to the main Java backend track',
+    ],
+    verification: [],
+    repositoryHighlights: [],
+    futureImprovements: ['Connect it to the AI job tracker or keep it as a standalone Python proof repo'],
+  },
 ]
 
 export const featuredProjects = projects.filter((project) => project.featured)

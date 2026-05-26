@@ -30,12 +30,30 @@ const proofBlocks = [
     title: 'Professional Delivery',
     description: 'Every repository is planned to include setup instructions, environment variables, case studies, clear README structure, and deployment readiness.',
   },
+  {
+    title: 'Python Expansion',
+    description: 'Python is being added deliberately for automation, lightweight backend experiments, and developer tooling that complements the main Java and React track.',
+  },
 ]
 
 const workflowPoints = [
   'Backend-first foundation so larger fullstack apps reuse proven patterns',
   'Documentation that helps recruiters scan quickly and engineers go deeper',
   'AI-assisted workflow used to accelerate iteration without replacing understanding',
+  'Python added as a practical support capability for automation, tooling, and compact service experiments',
+]
+
+const aboutPoints = [
+  'Based in Izmir and building a portfolio aimed at Java, Spring Boot, React, and Fullstack roles.',
+  'I prefer projects that make architecture, business logic, and documentation quality easy to review.',
+  'My long-term goal is a portfolio archive with 15-20 intentional repositories instead of a few disconnected demos.',
+]
+
+const roadmapPoints = [
+  'Complete richer case study pages for finished projects',
+  'Build TaskFlow as the main fullstack flagship application',
+  'Add Python proof repositories for automation and small backend tooling',
+  'Continue growing the blog into architecture notes and workflow writeups',
 ]
 
 export function HomePage() {
@@ -114,7 +132,7 @@ export function HomePage() {
             title="A hiring signal designed as a system, not a random collection of demos"
             description="The goal is to make skill evaluation easier. Each repository has a clear purpose, and the portfolio ties them together into one coherent engineering story."
           />
-          <div className="mt-12 grid gap-6 lg:grid-cols-2">
+          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {proofBlocks.map((block) => (
               <article key={block.title} className="rounded-[1.75rem] border border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(15,21,43,0.78),rgba(8,11,24,0.96))] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.24)]">
                 <h3 className="text-xl font-semibold tracking-tight text-[var(--color-ink)]">{block.title}</h3>
@@ -164,6 +182,36 @@ export function HomePage() {
         </Container>
       </section>
 
+      <section className="border-y border-[var(--color-border)] bg-[color:rgba(8,12,25,0.68)] py-18 sm:py-24">
+        <Container>
+          <SectionHeading
+            eyebrow="About And Roadmap"
+            title="A focused career direction with room to grow into adjacent strengths"
+            description="The main hiring story stays centered on Java, Spring Boot, React, and PostgreSQL. I am also expanding into Python in a disciplined way that supports automation, developer tooling, and compact backend experiments."
+          />
+          <div className="mt-12 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+            <article className="rounded-[1.75rem] border border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(14,20,40,0.78),rgba(8,12,24,0.96))] p-7">
+              <h3 className="text-xl font-semibold tracking-tight text-[var(--color-ink)]">About me</h3>
+              <p className="mt-4 text-sm leading-7 text-[var(--color-muted)]">{siteConfig.secondaryFocus}</p>
+              <div className="mt-5 space-y-4 text-sm leading-7 text-[var(--color-muted)]">
+                {aboutPoints.map((item) => (
+                  <p key={item}>{item}</p>
+                ))}
+              </div>
+            </article>
+
+            <article className="rounded-[1.75rem] border border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(14,20,40,0.78),rgba(8,12,24,0.96))] p-7">
+              <h3 className="text-xl font-semibold tracking-tight text-[var(--color-ink)]">Current roadmap</h3>
+              <ul className="mt-5 space-y-3 text-sm leading-7 text-[var(--color-muted)]">
+                {roadmapPoints.map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
+              </ul>
+            </article>
+          </div>
+        </Container>
+      </section>
+
       <section className="border-y border-[var(--color-border)] bg-[color:rgba(11,17,35,0.75)] py-18 sm:py-24">
         <Container>
           <SectionHeading
@@ -198,8 +246,8 @@ export function HomePage() {
         <Container>
           <SectionHeading
             eyebrow="Notes"
-            title="Technical writing that supports the code"
-            description="The blog and notes section is where I turn implementation work into architecture explanations, workflow notes, and practical takeaways."
+            title="Technical writing that supports the code and the roadmap"
+            description="The blog and notes section is where I turn implementation work into architecture explanations, workflow notes, and practical takeaways across Spring, frontend work, AI-assisted development, and selected Python experiments."
           />
           <div className="mt-12 grid gap-6 lg:grid-cols-2">
             {blogPosts.map((post) => (
@@ -221,8 +269,19 @@ export function HomePage() {
                   Open to Java, Spring Boot, React, and Fullstack opportunities.
                 </h2>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--color-muted)] sm:text-base">
-                  If you are hiring for backend or fullstack roles and want someone who cares about clean structure, professional documentation, and practical product delivery, I would be glad to connect.
+                  If you are hiring for backend or fullstack roles and want someone who cares about clean structure, professional documentation, practical product delivery, and modern AI-assisted workflow habits, I would be glad to connect.
                 </p>
+                <div className="mt-6 flex flex-wrap gap-3 text-sm text-[var(--color-muted)]">
+                  <span className="rounded-full border border-[var(--color-border)] bg-[color:rgba(255,255,255,0.03)] px-4 py-2">
+                    Based in {siteConfig.location}
+                  </span>
+                  <span className="rounded-full border border-[var(--color-border)] bg-[color:rgba(255,255,255,0.03)] px-4 py-2">
+                    Java + React primary track
+                  </span>
+                  <span className="rounded-full border border-[var(--color-border)] bg-[color:rgba(255,255,255,0.03)] px-4 py-2">
+                    Python automation expanding
+                  </span>
+                </div>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
                 <a

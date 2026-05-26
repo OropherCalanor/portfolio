@@ -25,4 +25,28 @@ export const blogPosts: BlogPost[] = [
       'The important part is staying responsible: using AI to accelerate thinking, not to replace understanding or ownership.',
     ],
   },
+  {
+    slug: 'spring-security-and-jwt-notes',
+    title: 'Spring Security And JWT Notes',
+    summary: 'What I learned from separating authentication into its own proof project instead of hiding it inside a larger CRUD app.',
+    publishedAt: '2026-05-26',
+    readingTime: '5 min read',
+    tags: ['Spring Security', 'JWT', 'Backend'],
+    content: [
+      'A dedicated authentication repository makes security decisions much easier to review. The tradeoff is worth it because recruiters and engineers can inspect the auth flow without first understanding a whole product domain.',
+      'That separation also creates reusable patterns for future flagship projects. It is easier to trust auth inside a larger system when the underlying flow was already proven in isolation.',
+    ],
+  },
+  {
+    slug: 'where-python-fits-in-my-portfolio',
+    title: 'Where Python Fits In My Portfolio',
+    summary: 'How I want to use Python alongside Java and React for automation, developer tooling, and small backend experiments.',
+    publishedAt: '2026-05-26',
+    readingTime: '4 min read',
+    tags: ['Python', 'Automation', 'Roadmap'],
+    content: [
+      'My main hiring story stays centered on Java, Spring Boot, React, and PostgreSQL. Python fits in as a complementary tool for automation, lightweight APIs, and data-oriented utilities that make the overall portfolio stronger.',
+      'That means I do not want random Python side projects. I want focused repositories that show scripting, FastAPI exploration, and practical workflow tooling in a way that supports the larger fullstack ecosystem.',
+    ],
+  },
 ]
