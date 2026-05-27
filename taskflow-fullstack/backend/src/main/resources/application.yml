@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: taskflow-backend
+  profiles:
+    default: dev
+
+server:
+  port: ${APP_PORT:8082}
+
+jwt:
+  secret: ${JWT_SECRET:taskflow-super-secret-key-taskflow-super-secret-key}
+  access-token-expiration-ms: ${JWT_ACCESS_TOKEN_EXPIRATION_MS:900000}
+  refresh-token-expiration-ms: ${JWT_REFRESH_TOKEN_EXPIRATION_MS:604800000}

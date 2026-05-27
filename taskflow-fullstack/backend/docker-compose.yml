@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: taskflow-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-taskflow_db}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - taskflow_postgres_data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+    container_name: taskflow-backend
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-taskflow_db}
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      APP_PORT: ${APP_PORT:-8082}
+    ports:
+      - "${APP_PORT:-8082}:8082"
+
+volumes:
+  taskflow_postgres_data:
+
