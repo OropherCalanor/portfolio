@@ -3,6 +3,7 @@ package com.ruhatkaratas.taskflow.common.exception;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -46,6 +47,11 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleUnreadableMessage(HttpMessageNotReadableException exception) {
+        return build(HttpStatus.BAD_REQUEST, "Request payload format is invalid");
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception exception) {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
@@ -56,4 +62,3 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(false, message, Map.of(), LocalDateTime.now()));
     }
 }
-

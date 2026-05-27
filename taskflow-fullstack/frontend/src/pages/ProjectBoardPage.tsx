@@ -21,6 +21,26 @@ function formatLaneTitle(status: UpdateTaskStatusRequest['status']) {
   return status.toLowerCase().replace(/_/g, ' ').replace(/(^| )\w/g, (character) => character.toUpperCase())
 }
 
+function normalizeDueDate(value?: string) {
+  if (!value) {
+    return undefined
+  }
+
+  const trimmed = value.trim()
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+    return trimmed
+  }
+
+  const localizedDateMatch = trimmed.match(/^(\d{2})[./-](\d{2})[./-](\d{4})$/)
+  if (localizedDateMatch) {
+    const [, day, month, year] = localizedDateMatch
+    return `${year}-${month}-${day}`
+  }
+
+  return trimmed
+}
+
 export function ProjectBoardPage() {
   const params = useParams<{ projectId: string }>()
   const projectId = Number(params.projectId)
@@ -114,7 +134,7 @@ export function ProjectBoardPage() {
         title: taskForm.title.trim(),
         description: taskForm.description?.trim() || undefined,
         priority: taskForm.priority,
-        dueDate: taskForm.dueDate || undefined,
+        dueDate: normalizeDueDate(taskForm.dueDate),
       })
 
       startTransition(() => {
