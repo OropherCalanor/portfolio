@@ -40,6 +40,52 @@
   margin-top: 1rem;
 }
 
+.chart-list {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.chart-row {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.chart-row__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.chart-row__meta strong {
+  color: var(--ink);
+}
+
+.chart-row__track {
+  height: 0.7rem;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.chart-row__fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 220ms ease;
+}
+
+.chart-row__fill--status {
+  background: linear-gradient(90deg, rgba(86, 220, 255, 0.9), rgba(55, 150, 255, 0.85));
+}
+
+.chart-row__fill--priority {
+  background: linear-gradient(90deg, rgba(255, 183, 77, 0.9), rgba(255, 105, 213, 0.82));
+}
+
 .list-item {
   border: 1px solid var(--border);
   border-radius: 1rem;
