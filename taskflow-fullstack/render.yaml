@@ -4,8 +4,6 @@ services:
     runtime: docker
     plan: free
     rootDir: taskflow-fullstack/backend
-    dockerContext: taskflow-fullstack/backend
-    dockerfilePath: taskflow-fullstack/backend/Dockerfile
     autoDeploy: true
     envVars:
       - key: PORT
