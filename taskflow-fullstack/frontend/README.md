@@ -66,6 +66,13 @@ cd frontend
 npm run build
 ```
 
+## Deployment Notes
+
+- Vercel is the recommended frontend host
+- Set the root directory to `taskflow-fullstack/frontend`
+- Set `VITE_API_BASE_URL` to the deployed backend URL
+- Keep `vercel.json` in place so React Router routes work on refresh
+
 ## What This Proves
 
 - React + TypeScript application structuring

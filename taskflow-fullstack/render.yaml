@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: taskflow-backend
+    runtime: docker
+    plan: free
+    rootDir: taskflow-fullstack/backend
+    dockerContext: taskflow-fullstack/backend
+    dockerfilePath: taskflow-fullstack/backend/Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: APP_PORT
+        value: 10000
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_ACCESS_TOKEN_EXPIRATION_MS
+        value: 900000
+      - key: JWT_REFRESH_TOKEN_EXPIRATION_MS
+        value: 604800000
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: APP_DEMO_SEED
+        value: "false"

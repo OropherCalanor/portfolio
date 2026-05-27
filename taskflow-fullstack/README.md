@@ -33,6 +33,7 @@ Working slices currently include:
 - task status updates
 - assignee controls
 - dashboard refresh and summary cards
+- optional demo seed for recruiter walkthroughs
 
 ## Project Structure
 
@@ -76,7 +77,6 @@ See:
 
 ## Next Steps
 
-- project member invite / add-member flow
-- drag-and-drop board interactions
-- richer analytics and dashboard breakdowns
-- final screenshots, case study polish, and deployment path
+- deployment execution using the plan in [DEPLOYMENT_PLAN.md](/Users/ruhatkaratas/Documents/Portfolio%20Website/taskflow-fullstack/DEPLOYMENT_PLAN.md:1)
+- demo seed data for live reviewer walkthroughs
+- final README polish and live demo link

@@ -5,7 +5,7 @@ spring:
     default: dev
 
 server:
-  port: ${APP_PORT:8082}
+  port: ${PORT:${APP_PORT:8082}}
 
 jwt:
   secret: ${JWT_SECRET:taskflow-super-secret-key-taskflow-super-secret-key}
