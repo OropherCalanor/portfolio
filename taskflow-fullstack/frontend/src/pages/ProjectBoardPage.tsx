@@ -1,6 +1,7 @@
 import { startTransition, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import '../components/ui/panel.css'
+import { useAuth } from '../features/auth/auth-context'
 import { projectService } from '../services/project-service'
 import { taskService } from '../services/task-service'
 import type { AddProjectMemberRequest, ProjectMemberResponse, ProjectResponse } from '../types/project'
@@ -42,9 +43,22 @@ function normalizeDueDate(value?: string) {
   return trimmed
 }
 
+function isDueSoon(date?: string | null) {
+  if (!date) {
+    return false
+  }
+
+  const today = new Date()
+  const dueDate = new Date(`${date}T00:00:00`)
+  const differenceInMs = dueDate.getTime() - today.getTime()
+  const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24)
+  return differenceInDays >= 0 && differenceInDays <= 3
+}
+
 export function ProjectBoardPage() {
   const params = useParams<{ projectId: string }>()
   const projectId = Number(params.projectId)
+  const { user } = useAuth()
 
   const [project, setProject] = useState<ProjectResponse | null>(null)
   const [members, setMembers] = useState<ProjectMemberResponse[]>([])
@@ -60,6 +74,7 @@ export function ProjectBoardPage() {
   const [draggingTaskId, setDraggingTaskId] = useState<number | null>(null)
   const [dragOverLane, setDragOverLane] = useState<UpdateTaskStatusRequest['status'] | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [showOnlyMyTasks, setShowOnlyMyTasks] = useState(false)
   const [priorityFilter, setPriorityFilter] = useState<'ALL' | CreateTaskRequest['priority']>('ALL')
   const [assigneeFilter, setAssigneeFilter] = useState<'ALL' | string>('ALL')
   const [taskForm, setTaskForm] = useState<CreateTaskRequest>({
@@ -269,14 +284,24 @@ export function ProjectBoardPage() {
     const matchesAssignee =
       assigneeFilter === 'ALL' ||
       String(task.assigneeId ?? '') === assigneeFilter
+    const matchesOwnership =
+      !showOnlyMyTasks ||
+      task.assigneeId === user?.id ||
+      task.reporterId === user?.id
 
-    return matchesSearch && matchesPriority && matchesAssignee
+    return matchesSearch && matchesPriority && matchesAssignee && matchesOwnership
   })
 
-  const groupedTasks = laneOrder.map((status) => ({
-    status,
-    items: filteredTasks.filter((task) => task.status === status),
-  }))
+  const groupedTasks = laneOrder.map((status) => {
+    const items = filteredTasks.filter((task) => task.status === status)
+
+    return {
+      status,
+      items,
+      highPriorityCount: items.filter((task) => task.priority === 'HIGH' || task.priority === 'CRITICAL').length,
+      dueSoonCount: items.filter((task) => isDueSoon(task.dueDate)).length,
+    }
+  })
 
   return (
     <section className="panel-grid">
@@ -349,6 +374,15 @@ export function ProjectBoardPage() {
                 </select>
               </div>
             </div>
+            <label className="toggle-row" htmlFor="my-tasks-toggle">
+              <input
+                id="my-tasks-toggle"
+                type="checkbox"
+                checked={showOnlyMyTasks}
+                onChange={(event) => setShowOnlyMyTasks(event.target.checked)}
+              />
+              <span>Show only tasks I own or am assigned to</span>
+            </label>
           </div>
           <div className="badge-row">
             <span className="badge">{filteredTasks.length} visible tasks</span>
@@ -506,6 +540,10 @@ export function ProjectBoardPage() {
               <p className="panel__muted" style={{ marginTop: '0.45rem' }}>
                 {lane.items.length} task{lane.items.length === 1 ? '' : 's'}
               </p>
+              <div className="badge-row" style={{ marginTop: '0.6rem' }}>
+                <span className="badge">{lane.highPriorityCount} high focus</span>
+                <span className="badge">{lane.dueSoonCount} due soon</span>
+              </div>
 
               <div className="list">
                 {lane.items.length ? (
@@ -522,9 +560,10 @@ export function ProjectBoardPage() {
                         {task.description ?? 'No task description yet.'}
                       </p>
                       <div className="badge-row">
-                        <span className="badge">{task.priority}</span>
+                        <span className={`badge badge--priority badge--priority-${task.priority.toLowerCase()}`}>{task.priority}</span>
                         {task.dueDate ? <span className="badge">Due {task.dueDate}</span> : null}
                         {task.assigneeEmail ? <span className="badge">{task.assigneeEmail}</span> : null}
+                        {task.reporterId === user?.id ? <span className="badge">Reported by me</span> : null}
                       </div>
                       <div className="field" style={{ marginTop: '0.9rem' }}>
                         <label htmlFor={`task-assignee-${task.id}`}>Assignee</label>

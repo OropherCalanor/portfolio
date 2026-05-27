@@ -88,6 +88,34 @@
   font-size: 0.85rem;
 }
 
+.badge--priority {
+  font-weight: 700;
+}
+
+.badge--priority-low {
+  border-color: rgba(122, 240, 183, 0.35);
+  color: #9ef5cb;
+  background: rgba(122, 240, 183, 0.08);
+}
+
+.badge--priority-medium {
+  border-color: rgba(86, 220, 255, 0.35);
+  color: #8ae7ff;
+  background: rgba(86, 220, 255, 0.08);
+}
+
+.badge--priority-high {
+  border-color: rgba(255, 183, 77, 0.38);
+  color: #ffd59a;
+  background: rgba(255, 183, 77, 0.08);
+}
+
+.badge--priority-critical {
+  border-color: rgba(255, 110, 199, 0.42);
+  color: #ff9fe4;
+  background: rgba(255, 110, 199, 0.1);
+}
+
 .form-grid {
   display: grid;
   gap: 1rem;
@@ -120,6 +148,20 @@
 .field select:focus {
   outline: 1px solid var(--border-strong);
   border-color: var(--border-strong);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.toggle-row input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--accent);
 }
 
 .button-row {
