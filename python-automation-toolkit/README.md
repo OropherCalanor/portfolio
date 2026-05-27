@@ -67,11 +67,14 @@ python-automation-toolkit
 ├── README.md
 ├── pyproject.toml
 ├── docs
+├── examples
 ├── src
 │   └── automation_toolkit
 │       ├── cli.py
 │       ├── common
-│       └── file_organizer
+│       ├── csv_cleaner
+│       ├── file_organizer
+│       └── readme_starter
 └── tests
 ```
 
@@ -80,6 +83,12 @@ python-automation-toolkit
 ```bash
 python3 -m unittest discover -s tests
 ```
+
+## Demo Assets
+
+- sample inputs live in `examples/sample-inputs`
+- sample outputs live in `examples/sample-outputs`
+- command walkthroughs live in `docs/usage-examples.md`
 
 ## What I Learned
 
