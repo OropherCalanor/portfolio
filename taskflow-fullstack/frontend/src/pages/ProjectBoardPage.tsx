@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import '../components/ui/panel.css'
 import { projectService } from '../services/project-service'
 import { taskService } from '../services/task-service'
-import type { ProjectMemberResponse, ProjectResponse } from '../types/project'
+import type { AddProjectMemberRequest, ProjectMemberResponse, ProjectResponse } from '../types/project'
 import type { AssignTaskRequest, CreateTaskRequest, TaskResponse, UpdateTaskStatusRequest } from '../types/task'
 
 const laneOrder: Array<UpdateTaskStatusRequest['status']> = [
@@ -16,6 +16,7 @@ const laneOrder: Array<UpdateTaskStatusRequest['status']> = [
 ]
 
 const priorityOptions: CreateTaskRequest['priority'][] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']
+const membershipRoleOptions: AddProjectMemberRequest['membershipRole'][] = ['MANAGER', 'CONTRIBUTOR', 'VIEWER']
 
 function formatLaneTitle(status: UpdateTaskStatusRequest['status']) {
   return status.toLowerCase().replace(/_/g, ' ').replace(/(^| )\w/g, (character) => character.toUpperCase())
@@ -51,7 +52,9 @@ export function ProjectBoardPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [taskError, setTaskError] = useState<string | null>(null)
+  const [memberError, setMemberError] = useState<string | null>(null)
   const [isCreatingTask, setIsCreatingTask] = useState(false)
+  const [isAddingMember, setIsAddingMember] = useState(false)
   const [updatingTaskId, setUpdatingTaskId] = useState<number | null>(null)
   const [assigningTaskId, setAssigningTaskId] = useState<number | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -63,6 +66,10 @@ export function ProjectBoardPage() {
     description: '',
     priority: 'MEDIUM',
     dueDate: '',
+  })
+  const [memberForm, setMemberForm] = useState<AddProjectMemberRequest>({
+    email: '',
+    membershipRole: 'CONTRIBUTOR',
   })
 
   useEffect(() => {
@@ -118,6 +125,13 @@ export function ProjectBoardPage() {
 
   function handleTaskFieldChange<K extends keyof CreateTaskRequest>(field: K, value: CreateTaskRequest[K]) {
     setTaskForm((current) => ({
+      ...current,
+      [field]: value,
+    }))
+  }
+
+  function handleMemberFieldChange<K extends keyof AddProjectMemberRequest>(field: K, value: AddProjectMemberRequest[K]) {
+    setMemberForm((current) => ({
       ...current,
       [field]: value,
     }))
@@ -190,6 +204,32 @@ export function ProjectBoardPage() {
       setTaskError(caughtError instanceof Error ? caughtError.message : 'Unable to assign task')
     } finally {
       setAssigningTaskId(null)
+    }
+  }
+
+  async function handleAddMember(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setMemberError(null)
+    setIsAddingMember(true)
+
+    try {
+      const createdMember = await projectService.addProjectMember(projectId, {
+        email: memberForm.email.trim(),
+        membershipRole: memberForm.membershipRole,
+      })
+
+      startTransition(() => {
+        setMembers((current) => [...current, createdMember])
+      })
+
+      setMemberForm({
+        email: '',
+        membershipRole: 'CONTRIBUTOR',
+      })
+    } catch (caughtError) {
+      setMemberError(caughtError instanceof Error ? caughtError.message : 'Unable to add member')
+    } finally {
+      setIsAddingMember(false)
     }
   }
 
@@ -286,6 +326,62 @@ export function ProjectBoardPage() {
           </div>
           <div className="badge-row">
             <span className="badge">{filteredTasks.length} visible tasks</span>
+          </div>
+        </div>
+
+        <div className="panel">
+          <p className="shell__eyebrow">Members</p>
+          <h4 style={{ marginTop: '0.75rem', fontSize: '1.35rem' }}>Add project collaborators</h4>
+          <p className="panel__muted" style={{ marginTop: '0.65rem' }}>
+            Add an existing user by email, then assign tasks directly from the board.
+          </p>
+
+          {memberError ? <div className="error-banner" style={{ marginTop: '1rem' }}>{memberError}</div> : null}
+
+          <form className="form-grid" onSubmit={handleAddMember}>
+            <div className="field">
+              <label htmlFor="member-email">User email</label>
+              <input
+                id="member-email"
+                type="email"
+                value={memberForm.email}
+                onChange={(event) => handleMemberFieldChange('email', event.target.value)}
+                placeholder="teammate@example.com"
+                required
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="membership-role">Membership role</label>
+              <select
+                id="membership-role"
+                value={memberForm.membershipRole}
+                onChange={(event) => handleMemberFieldChange('membershipRole', event.target.value as AddProjectMemberRequest['membershipRole'])}
+              >
+                {membershipRoleOptions.map((role) => (
+                  <option key={role} value={role}>
+                    {role}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="button-row">
+              <button type="submit" className="button-secondary" disabled={isAddingMember}>
+                {isAddingMember ? 'Adding member...' : 'Add member'}
+              </button>
+            </div>
+          </form>
+
+          <div className="list">
+            {members.map((member) => (
+              <div key={member.userId} className="list-item">
+                <strong>{member.firstName} {member.lastName}</strong>
+                <p className="panel__muted" style={{ marginTop: '0.35rem' }}>
+                  {member.email} · {member.membershipRole}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 

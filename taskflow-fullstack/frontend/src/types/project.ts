@@ -15,6 +15,11 @@ export type CreateProjectRequest = {
   description?: string
 }
 
+export type AddProjectMemberRequest = {
+  email: string
+  membershipRole: 'OWNER' | 'MANAGER' | 'CONTRIBUTOR' | 'VIEWER'
+}
+
 export type ProjectMemberResponse = {
   userId: number
   firstName: string

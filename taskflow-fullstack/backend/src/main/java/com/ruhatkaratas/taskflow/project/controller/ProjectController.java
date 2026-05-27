@@ -1,5 +1,6 @@
 package com.ruhatkaratas.taskflow.project.controller;
 
+import com.ruhatkaratas.taskflow.project.dto.AddProjectMemberRequest;
 import com.ruhatkaratas.taskflow.common.response.ApiResponse;
 import com.ruhatkaratas.taskflow.project.dto.CreateProjectRequest;
 import com.ruhatkaratas.taskflow.project.dto.ProjectMemberResponse;
@@ -65,5 +66,18 @@ public class ProjectController {
                 "Project members retrieved successfully",
                 projectService.getProjectMembers(id, authentication.getName())
         ));
+    }
+
+    @PostMapping("/{id}/members")
+    public ResponseEntity<ApiResponse<ProjectMemberResponse>> addProjectMember(
+            @PathVariable Long id,
+            @Valid @RequestBody AddProjectMemberRequest request,
+            Authentication authentication
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(
+                        "Project member added successfully",
+                        projectService.addProjectMember(id, request, authentication.getName())
+                ));
     }
 }

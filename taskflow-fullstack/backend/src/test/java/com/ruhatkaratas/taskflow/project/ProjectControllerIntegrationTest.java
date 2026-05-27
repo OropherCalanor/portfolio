@@ -1,10 +1,12 @@
 package com.ruhatkaratas.taskflow.project;
 
+import com.ruhatkaratas.taskflow.project.dto.AddProjectMemberRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ruhatkaratas.taskflow.auth.dto.LoginRequest;
 import com.ruhatkaratas.taskflow.auth.dto.RegisterRequest;
 import com.ruhatkaratas.taskflow.project.dto.CreateProjectRequest;
+import com.ruhatkaratas.taskflow.project.entity.MembershipRole;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,6 +34,7 @@ class ProjectControllerIntegrationTest {
     @Test
     void authenticatedUserCanCreateAndListProjects() throws Exception {
         registerAndLogin("builder@example.com");
+        registerAndLogin("teammate@example.com");
         String token = loginAndGetToken("builder@example.com", "Password1");
 
         String createResponse = mockMvc.perform(post("/api/v1/projects")
@@ -64,6 +67,21 @@ class ProjectControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[0].email").value("builder@example.com"))
                 .andExpect(jsonPath("$.data[0].membershipRole").value("OWNER"));
+
+        mockMvc.perform(post("/api/v1/projects/" + projectId + "/members")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new AddProjectMemberRequest("teammate@example.com", MembershipRole.CONTRIBUTOR)
+                        )))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.email").value("teammate@example.com"))
+                .andExpect(jsonPath("$.data.membershipRole").value("CONTRIBUTOR"));
+
+        mockMvc.perform(get("/api/v1/projects/" + projectId + "/members")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[1].email").value("teammate@example.com"));
     }
 
     @Test

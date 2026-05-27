@@ -2,6 +2,7 @@ package com.ruhatkaratas.taskflow.project.service.impl;
 
 import com.ruhatkaratas.taskflow.common.exception.BadRequestException;
 import com.ruhatkaratas.taskflow.common.exception.ResourceNotFoundException;
+import com.ruhatkaratas.taskflow.project.dto.AddProjectMemberRequest;
 import com.ruhatkaratas.taskflow.project.dto.CreateProjectRequest;
 import com.ruhatkaratas.taskflow.project.dto.ProjectMemberResponse;
 import com.ruhatkaratas.taskflow.project.dto.ProjectResponse;
@@ -88,6 +89,33 @@ public class ProjectServiceImpl implements ProjectService {
                 .sorted(Comparator.comparing(ProjectMember::getJoinedAt))
                 .map(this::mapToMemberResponse)
                 .toList();
+    }
+
+    @Override
+    public ProjectMemberResponse addProjectMember(Long id, AddProjectMemberRequest request, String currentUserEmail) {
+        User currentUser = findUser(currentUserEmail);
+        Project project = findAccessibleProject(id, currentUser.getId());
+        ProjectMember currentMembership = projectMemberRepository.findByProjectIdAndUserId(project.getId(), currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found"));
+
+        if (currentMembership.getMembershipRole() != MembershipRole.OWNER
+                && currentMembership.getMembershipRole() != MembershipRole.MANAGER) {
+            throw new BadRequestException("Only owners or managers can add project members");
+        }
+
+        User newMember = userRepository.findByEmailIgnoreCase(request.email().trim())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (projectMemberRepository.existsByProjectIdAndUserId(project.getId(), newMember.getId())) {
+            throw new BadRequestException("User is already a project member");
+        }
+
+        ProjectMember member = new ProjectMember();
+        member.setProject(project);
+        member.setUser(newMember);
+        member.setMembershipRole(request.membershipRole());
+
+        return mapToMemberResponse(projectMemberRepository.save(member));
     }
 
     private User findUser(String email) {
