@@ -1,5 +1,5 @@
 import { apiRequest } from '../lib/api-client'
-import type { CreateProjectRequest, ProjectResponse } from '../types/project'
+import type { CreateProjectRequest, ProjectMemberResponse, ProjectResponse } from '../types/project'
 
 export const projectService = {
   async getProjects(): Promise<ProjectResponse[]> {
@@ -16,6 +16,13 @@ export const projectService = {
     })
   },
 
+  async getProjectMembers(projectId: number): Promise<ProjectMemberResponse[]> {
+    return apiRequest<ProjectMemberResponse[]>(`/api/v1/projects/${projectId}/members`, {
+      method: 'GET',
+      authenticated: true,
+    })
+  },
+
   async createProject(payload: CreateProjectRequest): Promise<ProjectResponse> {
     return apiRequest<ProjectResponse>('/api/v1/projects', {
       method: 'POST',
@@ -24,4 +31,3 @@ export const projectService = {
     })
   },
 }
-

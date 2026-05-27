@@ -15,3 +15,11 @@ export type CreateProjectRequest = {
   description?: string
 }
 
+export type ProjectMemberResponse = {
+  userId: number
+  firstName: string
+  lastName: string
+  email: string
+  membershipRole: string
+  joinedAt: string
+}

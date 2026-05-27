@@ -3,6 +3,7 @@ package com.ruhatkaratas.taskflow.project.service.impl;
 import com.ruhatkaratas.taskflow.common.exception.BadRequestException;
 import com.ruhatkaratas.taskflow.common.exception.ResourceNotFoundException;
 import com.ruhatkaratas.taskflow.project.dto.CreateProjectRequest;
+import com.ruhatkaratas.taskflow.project.dto.ProjectMemberResponse;
 import com.ruhatkaratas.taskflow.project.dto.ProjectResponse;
 import com.ruhatkaratas.taskflow.project.entity.MembershipRole;
 import com.ruhatkaratas.taskflow.project.entity.Project;
@@ -72,17 +73,21 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectResponse getProjectById(Long id, String currentUserEmail) {
         User currentUser = findUser(currentUserEmail);
 
-        Project project = projectRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Project not found"));
-
-        boolean belongsToProject = projectMemberRepository.findByProjectId(project.getId()).stream()
-                .anyMatch(member -> member.getUser().getId().equals(currentUser.getId()));
-
-        if (!belongsToProject) {
-            throw new ResourceNotFoundException("Project not found");
-        }
+        Project project = findAccessibleProject(id, currentUser.getId());
 
         return mapToResponse(project);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProjectMemberResponse> getProjectMembers(Long id, String currentUserEmail) {
+        User currentUser = findUser(currentUserEmail);
+        Project project = findAccessibleProject(id, currentUser.getId());
+
+        return projectMemberRepository.findByProjectId(project.getId()).stream()
+                .sorted(Comparator.comparing(ProjectMember::getJoinedAt))
+                .map(this::mapToMemberResponse)
+                .toList();
     }
 
     private User findUser(String email) {
@@ -102,5 +107,29 @@ public class ProjectServiceImpl implements ProjectService {
                 project.getCreatedAt()
         );
     }
-}
 
+    private ProjectMemberResponse mapToMemberResponse(ProjectMember member) {
+        return new ProjectMemberResponse(
+                member.getUser().getId(),
+                member.getUser().getFirstName(),
+                member.getUser().getLastName(),
+                member.getUser().getEmail(),
+                member.getMembershipRole(),
+                member.getJoinedAt()
+        );
+    }
+
+    private Project findAccessibleProject(Long projectId, Long currentUserId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found"));
+
+        boolean belongsToProject = projectMemberRepository.findByProjectId(project.getId()).stream()
+                .anyMatch(member -> member.getUser().getId().equals(currentUserId));
+
+        if (!belongsToProject) {
+            throw new ResourceNotFoundException("Project not found");
+        }
+
+        return project;
+    }
+}

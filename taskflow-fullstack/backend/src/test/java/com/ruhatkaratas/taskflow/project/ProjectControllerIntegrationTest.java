@@ -58,6 +58,12 @@ class ProjectControllerIntegrationTest {
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.name").value("TaskFlow Platform"));
+
+        mockMvc.perform(get("/api/v1/projects/" + projectId + "/members")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].email").value("builder@example.com"))
+                .andExpect(jsonPath("$.data[0].membershipRole").value("OWNER"));
     }
 
     @Test

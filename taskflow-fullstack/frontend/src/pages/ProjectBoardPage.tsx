@@ -3,8 +3,8 @@ import { Link, useParams } from 'react-router-dom'
 import '../components/ui/panel.css'
 import { projectService } from '../services/project-service'
 import { taskService } from '../services/task-service'
-import type { ProjectResponse } from '../types/project'
-import type { CreateTaskRequest, TaskResponse, UpdateTaskStatusRequest } from '../types/task'
+import type { ProjectMemberResponse, ProjectResponse } from '../types/project'
+import type { AssignTaskRequest, CreateTaskRequest, TaskResponse, UpdateTaskStatusRequest } from '../types/task'
 
 const laneOrder: Array<UpdateTaskStatusRequest['status']> = [
   'BACKLOG',
@@ -26,12 +26,17 @@ export function ProjectBoardPage() {
   const projectId = Number(params.projectId)
 
   const [project, setProject] = useState<ProjectResponse | null>(null)
+  const [members, setMembers] = useState<ProjectMemberResponse[]>([])
   const [tasks, setTasks] = useState<TaskResponse[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [taskError, setTaskError] = useState<string | null>(null)
   const [isCreatingTask, setIsCreatingTask] = useState(false)
   const [updatingTaskId, setUpdatingTaskId] = useState<number | null>(null)
+  const [assigningTaskId, setAssigningTaskId] = useState<number | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [priorityFilter, setPriorityFilter] = useState<'ALL' | CreateTaskRequest['priority']>('ALL')
+  const [assigneeFilter, setAssigneeFilter] = useState<'ALL' | string>('ALL')
   const [taskForm, setTaskForm] = useState<CreateTaskRequest>({
     projectId,
     title: '',
@@ -54,9 +59,10 @@ export function ProjectBoardPage() {
       setError(null)
 
       try {
-        const [projectData, taskData] = await Promise.all([
+        const [projectData, taskData, memberData] = await Promise.all([
           projectService.getProjectById(projectId),
           taskService.getTasksByProject(projectId),
+          projectService.getProjectMembers(projectId),
         ])
 
         if (!active) {
@@ -66,6 +72,7 @@ export function ProjectBoardPage() {
         startTransition(() => {
           setProject(projectData)
           setTasks(taskData)
+          setMembers(memberData)
           setTaskForm((current) => ({
             ...current,
             projectId,
@@ -146,9 +153,43 @@ export function ProjectBoardPage() {
     }
   }
 
+  async function handleAssigneeChange(taskId: number, assigneeUserId: string) {
+    setTaskError(null)
+    setAssigningTaskId(taskId)
+
+    try {
+      const payload: AssignTaskRequest = {
+        assigneeUserId: Number(assigneeUserId),
+      }
+      const updatedTask = await taskService.assignTask(taskId, payload)
+
+      startTransition(() => {
+        setTasks((current) => current.map((task) => (task.id === taskId ? updatedTask : task)))
+      })
+    } catch (caughtError) {
+      setTaskError(caughtError instanceof Error ? caughtError.message : 'Unable to assign task')
+    } finally {
+      setAssigningTaskId(null)
+    }
+  }
+
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch =
+      !searchQuery ||
+      task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      task.description?.toLowerCase().includes(searchQuery.toLowerCase())
+
+    const matchesPriority = priorityFilter === 'ALL' || task.priority === priorityFilter
+    const matchesAssignee =
+      assigneeFilter === 'ALL' ||
+      String(task.assigneeId ?? '') === assigneeFilter
+
+    return matchesSearch && matchesPriority && matchesAssignee
+  })
+
   const groupedTasks = laneOrder.map((status) => ({
     status,
-    items: tasks.filter((task) => task.status === status),
+    items: filteredTasks.filter((task) => task.status === status),
   }))
 
   return (
@@ -166,11 +207,65 @@ export function ProjectBoardPage() {
             {project ? <span className="badge">{project.key}</span> : null}
             {project ? <span className="badge">{project.status}</span> : null}
             <span className="badge">{tasks.length} tasks</span>
+            <span className="badge">{members.length} members</span>
           </div>
           <div className="button-row">
             <Link to="/projects" className="button-secondary">
               Back to projects
             </Link>
+          </div>
+        </div>
+
+        <div className="panel">
+          <p className="shell__eyebrow">Board Filters</p>
+          <h4 style={{ marginTop: '0.75rem', fontSize: '1.35rem' }}>Slice work by search, priority, or assignee</h4>
+          <div className="form-grid">
+            <div className="field">
+              <label htmlFor="search-query">Search tasks</label>
+              <input
+                id="search-query"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search by task title or description"
+              />
+            </div>
+
+            <div className="panel-grid panel-grid--two" style={{ gap: '0.85rem' }}>
+              <div className="field">
+                <label htmlFor="priority-filter">Priority</label>
+                <select
+                  id="priority-filter"
+                  value={priorityFilter}
+                  onChange={(event) => setPriorityFilter(event.target.value as 'ALL' | CreateTaskRequest['priority'])}
+                >
+                  <option value="ALL">All priorities</option>
+                  {priorityOptions.map((priority) => (
+                    <option key={priority} value={priority}>
+                      {priority}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="field">
+                <label htmlFor="assignee-filter">Assignee</label>
+                <select
+                  id="assignee-filter"
+                  value={assigneeFilter}
+                  onChange={(event) => setAssigneeFilter(event.target.value)}
+                >
+                  <option value="ALL">All assignees</option>
+                  {members.map((member) => (
+                    <option key={member.userId} value={String(member.userId)}>
+                      {member.firstName} {member.lastName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className="badge-row">
+            <span className="badge">{filteredTasks.length} visible tasks</span>
           </div>
         </div>
 
@@ -265,6 +360,25 @@ export function ProjectBoardPage() {
                       <div className="badge-row">
                         <span className="badge">{task.priority}</span>
                         {task.dueDate ? <span className="badge">Due {task.dueDate}</span> : null}
+                        {task.assigneeEmail ? <span className="badge">{task.assigneeEmail}</span> : null}
+                      </div>
+                      <div className="field" style={{ marginTop: '0.9rem' }}>
+                        <label htmlFor={`task-assignee-${task.id}`}>Assignee</label>
+                        <select
+                          id={`task-assignee-${task.id}`}
+                          value={task.assigneeId ? String(task.assigneeId) : ''}
+                          disabled={assigningTaskId === task.id}
+                          onChange={(event) => void handleAssigneeChange(task.id, event.target.value)}
+                        >
+                          <option value="" disabled>
+                            Select assignee
+                          </option>
+                          {members.map((member) => (
+                            <option key={member.userId} value={String(member.userId)}>
+                              {member.firstName} {member.lastName}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                       <div className="field" style={{ marginTop: '0.9rem' }}>
                         <label htmlFor={`task-status-${task.id}`}>Status</label>

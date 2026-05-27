@@ -2,6 +2,7 @@ package com.ruhatkaratas.taskflow.project.controller;
 
 import com.ruhatkaratas.taskflow.common.response.ApiResponse;
 import com.ruhatkaratas.taskflow.project.dto.CreateProjectRequest;
+import com.ruhatkaratas.taskflow.project.dto.ProjectMemberResponse;
 import com.ruhatkaratas.taskflow.project.dto.ProjectResponse;
 import com.ruhatkaratas.taskflow.project.service.ProjectService;
 import jakarta.validation.Valid;
@@ -54,5 +55,15 @@ public class ProjectController {
                 projectService.getProjectById(id, authentication.getName())
         ));
     }
-}
 
+    @GetMapping("/{id}/members")
+    public ResponseEntity<ApiResponse<List<ProjectMemberResponse>>> getProjectMembers(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(
+                "Project members retrieved successfully",
+                projectService.getProjectMembers(id, authentication.getName())
+        ));
+    }
+}

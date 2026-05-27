@@ -7,45 +7,37 @@ export function DashboardPage() {
   const [summary, setSummary] = useState<DashboardSummaryResponse | null>(null)
   const [myTasks, setMyTasks] = useState<DashboardTaskItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    let active = true
-
-    async function loadDashboard() {
+  async function loadDashboard(showRefreshingState: boolean) {
+    if (showRefreshingState) {
+      setIsRefreshing(true)
+    } else {
       setIsLoading(true)
-      setError(null)
-
-      try {
-        const [summaryData, myTasksData] = await Promise.all([
-          dashboardService.getSummary(),
-          dashboardService.getMyTasks(),
-        ])
-
-        if (!active) {
-          return
-        }
-
-        startTransition(() => {
-          setSummary(summaryData)
-          setMyTasks(myTasksData)
-        })
-      } catch (caughtError) {
-        if (active) {
-          setError(caughtError instanceof Error ? caughtError.message : 'Unable to load dashboard data')
-        }
-      } finally {
-        if (active) {
-          setIsLoading(false)
-        }
-      }
     }
+    setError(null)
 
-    void loadDashboard()
+    try {
+      const [summaryData, myTasksData] = await Promise.all([
+        dashboardService.getSummary(),
+        dashboardService.getMyTasks(),
+      ])
 
-    return () => {
-      active = false
+      startTransition(() => {
+        setSummary(summaryData)
+        setMyTasks(myTasksData)
+      })
+    } catch (caughtError) {
+      setError(caughtError instanceof Error ? caughtError.message : 'Unable to load dashboard data')
+    } finally {
+      setIsLoading(false)
+      setIsRefreshing(false)
     }
+  }
+
+  useEffect(() => {
+    void loadDashboard(false)
   }, [])
 
   const summaryCards = [
@@ -62,6 +54,11 @@ export function DashboardPage() {
         <p className="panel__muted" style={{ marginTop: '0.9rem' }}>
           This page now consumes the backend dashboard endpoints and is ready for richer card visuals and charts.
         </p>
+        <div className="button-row">
+          <button type="button" className="button-secondary" disabled={isRefreshing} onClick={() => void loadDashboard(true)}>
+            {isRefreshing ? 'Refreshing...' : 'Refresh dashboard'}
+          </button>
+        </div>
       </div>
 
       {error ? <div className="error-banner">{error}</div> : null}
