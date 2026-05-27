@@ -2,6 +2,12 @@ export type ProjectCategory = 'backend' | 'fullstack' | 'frontend' | 'ai' | 'dev
 export type ProjectStatus = 'planned' | 'in-progress' | 'completed'
 export type ProjectTier = 'flagship' | 'proof' | 'mini'
 
+export type ProjectScreenshot = {
+  src: string
+  alt: string
+  caption?: string
+}
+
 export type Project = {
   slug: string
   name: string
@@ -25,6 +31,7 @@ export type Project = {
   repositoryHighlights?: string[]
   nextMilestones?: string[]
   buildFocus?: string
+  screenshots?: ProjectScreenshot[]
   futureImprovements: string[]
 }
 

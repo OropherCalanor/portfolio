@@ -62,6 +62,33 @@ export const projects: Project[] = [
       'Includes demo data documentation and architecture notes',
       'Environment variables, Docker flow, and Postman usage are documented clearly',
     ],
+    screenshots: [
+      {
+        src: '/project-screenshots/spring-employee-management-api/swagger-overview.png',
+        alt: 'Swagger overview for the employee management API',
+        caption: 'Swagger overview showing the main employee, department, and position modules.',
+      },
+      {
+        src: '/project-screenshots/spring-employee-management-api/departments-list-response.png',
+        alt: 'Departments list response',
+        caption: 'Department endpoint with seeded demo data.',
+      },
+      {
+        src: '/project-screenshots/spring-employee-management-api/positions-list-response.png',
+        alt: 'Positions list response',
+        caption: 'Position endpoint response used for API walkthroughs.',
+      },
+      {
+        src: '/project-screenshots/spring-employee-management-api/employees-list-response.png',
+        alt: 'Employees list response',
+        caption: 'Default employee listing response with normalized entity relationships.',
+      },
+      {
+        src: '/project-screenshots/spring-employee-management-api/employees-filtered-response.png',
+        alt: 'Filtered employees response',
+        caption: 'Filtered employee query showing search and response consistency.',
+      },
+    ],
     futureImprovements: [
       'Add CI with GitHub Actions',
       'Add richer integration testing',
@@ -129,6 +156,28 @@ export const projects: Project[] = [
       'Authentication is isolated into its own repo for clarity',
       'Security flow is documented in a recruiter-friendly way',
       'Demo users, environment variables, and Docker workflow are prepared for easy review',
+    ],
+    screenshots: [
+      {
+        src: '/project-screenshots/spring-security-jwt-auth/swagger-auth-overview.png',
+        alt: 'Swagger overview for the JWT auth API',
+        caption: 'Auth-focused Swagger view prepared for quick reviewer walkthroughs.',
+      },
+      {
+        src: '/project-screenshots/spring-security-jwt-auth/register-success-response.png',
+        alt: 'Register success response',
+        caption: 'Successful registration flow through the auth API.',
+      },
+      {
+        src: '/project-screenshots/spring-security-jwt-auth/login-success-response.png',
+        alt: 'Login success response with tokens',
+        caption: 'Login response returning access and refresh tokens.',
+      },
+      {
+        src: '/project-screenshots/spring-security-jwt-auth/refresh-token-response.png',
+        alt: 'Refresh token response',
+        caption: 'Refresh token flow proving session renewal support.',
+      },
     ],
     futureImprovements: [
       'Add password reset flow',
@@ -201,6 +250,48 @@ export const projects: Project[] = [
       'Feature-based backend structure and authenticated React shell',
       'Board view demonstrates real product workflows instead of static placeholder UI',
       'Case study is supported by real milestones, commits, and verified slices rather than aspirational planning only',
+    ],
+    screenshots: [
+      {
+        src: '/project-screenshots/taskflow-fullstack/login-page.png',
+        alt: 'TaskFlow login page',
+        caption: 'Sign-in flow for the flagship fullstack product.',
+      },
+      {
+        src: '/project-screenshots/taskflow-fullstack/register-page.png',
+        alt: 'TaskFlow register page',
+        caption: 'Registration screen prepared for first-run reviewer testing.',
+      },
+      {
+        src: '/project-screenshots/taskflow-fullstack/dashboard-overview.png',
+        alt: 'TaskFlow dashboard overview',
+        caption: 'Dashboard surface showing summary and workflow visibility.',
+      },
+      {
+        src: '/project-screenshots/taskflow-fullstack/projects-list.png',
+        alt: 'TaskFlow projects list',
+        caption: 'Workspace view for browsing projects and jumping into board flows.',
+      },
+      {
+        src: '/project-screenshots/taskflow-fullstack/project-create-form.png',
+        alt: 'TaskFlow create project form',
+        caption: 'Project creation flow connected to the live backend.',
+      },
+      {
+        src: '/project-screenshots/taskflow-fullstack/board-overview.png',
+        alt: 'TaskFlow board overview',
+        caption: 'Kanban board with lane-based task workflow.',
+      },
+      {
+        src: '/project-screenshots/taskflow-fullstack/board-task-create.png',
+        alt: 'TaskFlow board task creation form',
+        caption: 'Task creation inside the board context.',
+      },
+      {
+        src: '/project-screenshots/taskflow-fullstack/board-drag-drop.png',
+        alt: 'TaskFlow drag and drop interaction',
+        caption: 'Drag-and-drop status movement on the Kanban board.',
+      },
     ],
     nextMilestones: [
       'Add richer project member invite and management flows',

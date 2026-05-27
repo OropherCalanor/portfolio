@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { Container } from '../components/ui/Container'
 import { TagList } from '../components/ui/TagList'
@@ -7,10 +8,30 @@ import { projects } from '../data/projects'
 export function ProjectDetailPage() {
   const { slug } = useParams()
   const project = projects.find((item) => item.slug === slug)
+  const [selectedScreenshotIndex, setSelectedScreenshotIndex] = useState<number | null>(null)
 
   if (!project) {
     return <Navigate to="/projects" replace />
   }
+
+  useEffect(() => {
+    setSelectedScreenshotIndex(null)
+  }, [project.slug])
+
+  useEffect(() => {
+    if (selectedScreenshotIndex === null) {
+      return
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setSelectedScreenshotIndex(null)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedScreenshotIndex])
 
   const relatedProjects = projects
     .filter((item) => item.slug !== project.slug)
@@ -18,6 +39,8 @@ export function ProjectDetailPage() {
     .slice(0, 3)
 
   const isPlannedOrInProgress = project.status !== 'completed'
+  const selectedScreenshot =
+    selectedScreenshotIndex !== null && project.screenshots ? project.screenshots[selectedScreenshotIndex] : null
 
   const sectionCards = [
     { title: 'Problem', items: [project.problem] },
@@ -136,6 +159,45 @@ export function ProjectDetailPage() {
           </div>
         ) : null}
 
+        {project.screenshots?.length ? (
+          <div className="mt-10">
+            <div className="mb-8 max-w-3xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--color-accent)]">Visual Walkthrough</p>
+              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[var(--color-ink)] sm:text-4xl">
+                Screenshots from the working project
+              </h2>
+              <p className="mt-4 text-base leading-7 text-[var(--color-muted)]">
+                These screenshots help reviewers understand the implementation quickly before opening the repository in detail.
+              </p>
+            </div>
+            <div className="flex gap-4 overflow-x-auto pb-3 [scrollbar-color:rgba(110,240,255,0.35)_transparent]">
+              {project.screenshots.map((shot, index) => (
+                <button
+                  key={shot.src}
+                  type="button"
+                  onClick={() => setSelectedScreenshotIndex(index)}
+                  className="group min-w-[17rem] max-w-[17rem] shrink-0 overflow-hidden rounded-[1.5rem] border border-[var(--color-border)] bg-[linear-gradient(180deg,rgba(14,20,40,0.76),rgba(8,12,24,0.96))] text-left shadow-[0_20px_70px_rgba(0,0,0,0.22)] transition duration-200 hover:-translate-y-1 hover:border-[var(--color-border-strong)] sm:min-w-[19rem] sm:max-w-[19rem]"
+                >
+                  <div className="h-48 overflow-hidden border-b border-[var(--color-border)] bg-[color:rgba(255,255,255,0.02)] sm:h-52">
+                    <img
+                      src={shot.src}
+                      alt={shot.alt}
+                      className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="px-4 py-4">
+                    <p className="text-sm font-semibold text-[var(--color-ink)]">{shot.alt}</p>
+                    {shot.caption ? (
+                      <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">{shot.caption}</p>
+                    ) : null}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
         <div className="mt-16 grid gap-6 lg:grid-cols-2">
           {sectionCards.map((section) => (
             <article
@@ -171,6 +233,35 @@ export function ProjectDetailPage() {
           </div>
         ) : null}
       </Container>
+
+      {selectedScreenshot ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[color:rgba(2,6,18,0.82)] p-4 backdrop-blur-sm"
+          onClick={() => setSelectedScreenshotIndex(null)}
+        >
+          <div
+            className="relative w-full max-w-6xl overflow-hidden rounded-[1.75rem] border border-[var(--color-border-strong)] bg-[linear-gradient(180deg,rgba(14,20,40,0.96),rgba(8,12,24,0.98))] shadow-[0_30px_90px_rgba(0,0,0,0.42)]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setSelectedScreenshotIndex(null)}
+              className="absolute right-4 top-4 z-10 rounded-full border border-[var(--color-border)] bg-[color:rgba(8,12,24,0.86)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-ink)]"
+            >
+              Close
+            </button>
+            <div className="max-h-[78vh] overflow-auto">
+              <img src={selectedScreenshot.src} alt={selectedScreenshot.alt} className="h-auto w-full object-contain" />
+            </div>
+            <div className="border-t border-[var(--color-border)] px-6 py-5">
+              <p className="text-base font-semibold text-[var(--color-ink)]">{selectedScreenshot.alt}</p>
+              {selectedScreenshot.caption ? (
+                <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">{selectedScreenshot.caption}</p>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   )
 }
