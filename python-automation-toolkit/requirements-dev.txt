@@ -1,0 +1,3 @@
+# Optional development dependencies for later expansion.
+pytest>=8.0.0
+
