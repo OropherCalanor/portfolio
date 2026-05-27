@@ -1,0 +1,150 @@
+.panel-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.panel-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  background: linear-gradient(180deg, rgba(15, 22, 40, 0.78), rgba(9, 13, 24, 0.94));
+  padding: 1.2rem;
+}
+
+.panel h3,
+.panel h4,
+.panel p {
+  margin: 0;
+}
+
+.panel__muted {
+  color: var(--muted);
+}
+
+.stat-value {
+  margin-top: 0.75rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.list {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.list-item {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 0.95rem 1rem;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+}
+
+.badge {
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  padding: 0.45rem 0.75rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.form-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.field label {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: 1px solid var(--border-strong);
+  border-color: var(--border-strong);
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.button-primary,
+.button-secondary,
+.inline-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.85rem 1.1rem;
+  font-weight: 600;
+}
+
+.button-primary {
+  border: 1px solid var(--border-strong);
+  color: var(--ink);
+  background: linear-gradient(90deg, rgba(86, 220, 255, 0.15), rgba(255, 105, 213, 0.14));
+  cursor: pointer;
+}
+
+.button-secondary {
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+}
+
+.inline-link {
+  border: 1px solid transparent;
+  color: var(--accent);
+  padding-inline: 0;
+}
+
+.error-banner {
+  border: 1px solid rgba(255, 120, 120, 0.35);
+  background: rgba(255, 120, 120, 0.08);
+  color: #ffb3b3;
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+}
+
+@media (max-width: 960px) {
+  .panel-grid--three,
+  .panel-grid--two {
+    grid-template-columns: 1fr;
+  }
+}
