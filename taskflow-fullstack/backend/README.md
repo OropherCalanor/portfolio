@@ -2,21 +2,16 @@
 
 ## Overview
 
-This is the backend foundation for `taskflow-fullstack`, the flagship fullstack project in the portfolio ecosystem.
+This is the Spring Boot backend for `taskflow-fullstack`, the flagship fullstack project in this portfolio ecosystem.
 
-The first slice focuses on:
+The backend currently provides a working product foundation for:
 
-- Spring Boot project setup
-- PostgreSQL configuration
-- Dockerized local development
-- auth and domain package structure
-- initial entity shells for users, roles, projects, members, tasks, and refresh tokens
-
-## Current Status
-
-This backend is in the foundation phase.
-
-The current goal is to establish a clean architecture base before feature implementation begins.
+- JWT-based authentication
+- project creation and listing
+- task creation and status management
+- project board data
+- dashboard summary data
+- project member lookup for assignee workflows
 
 ## Tech Stack
 
@@ -24,16 +19,62 @@ The current goal is to establish a clean architecture base before feature implem
 - Spring Boot
 - Spring Security
 - Spring Data JPA
-- PostgreSQL
-- Lombok
-- Springdoc OpenAPI
+- H2 test profile
+- PostgreSQL-ready configuration
 - Docker
-- Docker Compose
+- OpenAPI / Springdoc
+
+## Current Features
+
+- `register`, `login`, `logout`, and `me` auth endpoints
+- seeded application roles: `ROLE_ADMIN`, `ROLE_MANAGER`, `ROLE_MEMBER`
+- project creation, project list, project detail
+- project member listing
+- task creation
+- task list by project
+- task status update
+- task assignee update
+- dashboard summary, assigned tasks, and upcoming deadlines
+- centralized exception handling
+- integration test coverage across auth, projects, tasks, and dashboard
+
+## Architecture
+
+- feature-based backend modules: `auth`, `user`, `project`, `task`, `dashboard`, `common`
+- stateless JWT auth with custom security filter chain
+- DTO-driven API boundaries
+- service-layer business rules for membership, assignment, and task flow
+- shared API response structure for frontend integration
+
+## Local Run
+
+```bash
+cd backend
+./mvnw spring-boot:run -Dspring-boot.run.profiles=test -Dspring-boot.run.useTestClasspath=true
+```
+
+Default local API:
+
+- `http://localhost:8082`
+
+## Testing
+
+```bash
+cd backend
+./mvnw -q test
+```
+
+## What This Proves
+
+- secure Spring Boot API design
+- feature-based backend organization
+- real frontend-backend integration readiness
+- task and project workflow modeling
+- recruiter-friendly backend implementation quality
 
 ## Next Steps
 
-- implement authentication flow
-- add DTO and service layers
-- build project and task CRUD
-- add dashboard endpoints
-
+- add project member invite / add-member flow
+- add PostgreSQL-first runtime verification path for the full app
+- add richer dashboard metrics
+- add Swagger screenshots and example requests for the final repo presentation
