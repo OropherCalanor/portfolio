@@ -57,6 +57,8 @@ export function ProjectBoardPage() {
   const [isAddingMember, setIsAddingMember] = useState(false)
   const [updatingTaskId, setUpdatingTaskId] = useState<number | null>(null)
   const [assigningTaskId, setAssigningTaskId] = useState<number | null>(null)
+  const [draggingTaskId, setDraggingTaskId] = useState<number | null>(null)
+  const [dragOverLane, setDragOverLane] = useState<UpdateTaskStatusRequest['status'] | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [priorityFilter, setPriorityFilter] = useState<'ALL' | CreateTaskRequest['priority']>('ALL')
   const [assigneeFilter, setAssigneeFilter] = useState<'ALL' | string>('ALL')
@@ -185,6 +187,30 @@ export function ProjectBoardPage() {
       setUpdatingTaskId(taskId)
       setUpdatingTaskId(null)
     }
+  }
+
+  function handleTaskDragStart(taskId: number) {
+    setDraggingTaskId(taskId)
+  }
+
+  function handleTaskDragEnd() {
+    setDraggingTaskId(null)
+    setDragOverLane(null)
+  }
+
+  async function handleLaneDrop(status: UpdateTaskStatusRequest['status']) {
+    if (!draggingTaskId) {
+      return
+    }
+
+    const draggedTask = tasks.find((task) => task.id === draggingTaskId)
+    if (!draggedTask || draggedTask.status === status) {
+      handleTaskDragEnd()
+      return
+    }
+
+    await handleStatusChange(draggingTaskId, status)
+    handleTaskDragEnd()
   }
 
   async function handleAssigneeChange(taskId: number, assigneeUserId: string) {
@@ -459,7 +485,23 @@ export function ProjectBoardPage() {
           </article>
         ) : (
           groupedTasks.map((lane) => (
-            <article key={lane.status} className="panel">
+            <article
+              key={lane.status}
+              className={`panel kanban-lane${dragOverLane === lane.status ? ' kanban-lane--active' : ''}`}
+              onDragOver={(event) => {
+                event.preventDefault()
+                setDragOverLane(lane.status)
+              }}
+              onDragLeave={() => {
+                if (dragOverLane === lane.status) {
+                  setDragOverLane(null)
+                }
+              }}
+              onDrop={(event) => {
+                event.preventDefault()
+                void handleLaneDrop(lane.status)
+              }}
+            >
               <h4>{formatLaneTitle(lane.status)}</h4>
               <p className="panel__muted" style={{ marginTop: '0.45rem' }}>
                 {lane.items.length} task{lane.items.length === 1 ? '' : 's'}
@@ -468,7 +510,13 @@ export function ProjectBoardPage() {
               <div className="list">
                 {lane.items.length ? (
                   lane.items.map((task) => (
-                    <div key={task.id} className="list-item">
+                    <div
+                      key={task.id}
+                      className={`list-item kanban-card${draggingTaskId === task.id ? ' kanban-card--dragging' : ''}`}
+                      draggable={updatingTaskId !== task.id}
+                      onDragStart={() => handleTaskDragStart(task.id)}
+                      onDragEnd={handleTaskDragEnd}
+                    >
                       <strong>{task.title}</strong>
                       <p className="panel__muted" style={{ marginTop: '0.55rem' }}>
                         {task.description ?? 'No task description yet.'}

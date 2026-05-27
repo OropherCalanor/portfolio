@@ -47,6 +47,32 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
+.kanban-lane {
+  min-height: 18rem;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.kanban-lane--active {
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 1px rgba(86, 220, 255, 0.18), 0 0 32px rgba(86, 220, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.kanban-card {
+  cursor: grab;
+  transition: opacity 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+
+.kanban-card:active {
+  cursor: grabbing;
+}
+
+.kanban-card--dragging {
+  opacity: 0.45;
+  border-color: var(--border-strong);
+  transform: scale(0.98);
+}
+
 .badge-row {
   display: flex;
   flex-wrap: wrap;
