@@ -1,9 +1,9 @@
 package com.ruhatkaratas.taskflow.auth.security.service;
 
 import com.ruhatkaratas.taskflow.auth.security.CustomUserDetails;
-import com.ruhatkaratas.taskflow.common.exception.ResourceNotFoundException;
 import com.ruhatkaratas.taskflow.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         return userRepository.findByEmailIgnoreCase(username)
                 .map(CustomUserDetails::new)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
-

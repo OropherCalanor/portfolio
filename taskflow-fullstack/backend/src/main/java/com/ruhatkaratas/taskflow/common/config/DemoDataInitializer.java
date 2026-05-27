@@ -22,12 +22,14 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@Order(2)
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "app.demo-seed", havingValue = "true")
+@ConditionalOnProperty(name = "app.demo.seed", havingValue = "true")
 public class DemoDataInitializer implements CommandLineRunner {
 
     private static final String OWNER_EMAIL = "demo.owner@taskflow.dev";

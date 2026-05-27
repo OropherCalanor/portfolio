@@ -90,4 +90,16 @@ class AuthControllerIntegrationTest {
         mockMvc.perform(get("/api/v1/auth/me"))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    void loginWithUnknownUserReturnsUnauthorized() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("missing@example.com", "Password1");
+
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Invalid email or password"));
+    }
 }
