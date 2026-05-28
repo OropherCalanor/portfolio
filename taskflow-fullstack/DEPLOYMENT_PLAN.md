@@ -69,7 +69,7 @@ As of `May 27, 2026`, the main limitations are:
 5. Copy the backend public URL.
 6. Set `VITE_API_BASE_URL` in the frontend deployment to that backend URL.
 7. Add the frontend public domain and preview pattern to backend `CORS_ALLOWED_ORIGINS`.
-8. If you want a ready-made recruiter demo workspace, set `APP_DEMO_SEED=true` for the first launch.
+8. The backend seeds a ready-made recruiter demo workspace on non-test deployments.
 9. Deploy the frontend from `taskflow-fullstack/frontend`.
 10. Verify:
    - register
@@ -98,7 +98,7 @@ Recommended env mapping:
 - `DB_PASSWORD` = Supabase password
 - `JWT_SECRET` = strong random value
 - `CORS_ALLOWED_ORIGINS` = frontend domain list, for example `https://task-flow-rho-steel.vercel.app,https://task-flow-*.vercel.app`
-- `APP_DEMO_SEED` = `true` for the first seeded launch, then optionally `false` after the demo workspace is created
+- `APP_DEMO_SEED` = `true`
 
 ## Vercel Frontend Settings
 
@@ -123,7 +123,7 @@ Before marking TaskFlow as fully portfolio-ready, the deployed app should have:
 
 ## Demo Seed Accounts
 
-If `APP_DEMO_SEED=true`, the backend creates a recruiter-friendly workspace automatically:
+On non-test deployments, the backend creates a recruiter-friendly workspace automatically:
 
 - `demo.owner@taskflow.dev` / `Password1`
 - `demo.teammate@taskflow.dev` / `Password1`

@@ -7,7 +7,7 @@ export function LoginPage() {
   const { login, error, clearError, isLoading } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const [email, setEmail] = useState('ruhat@example.com')
+  const [email, setEmail] = useState('demo.owner@taskflow.dev')
   const [password, setPassword] = useState('Password1')
 
   const redirectPath = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? '/'

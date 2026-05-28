@@ -29,4 +29,4 @@ services:
       - key: CORS_ALLOWED_ORIGINS
         sync: false
       - key: APP_DEMO_SEED
-        value: "false"
+        value: "true"
