@@ -34,6 +34,39 @@ Demo account:
 - Email: `demo.owner@taskflow.dev`
 - Password: `Password1`
 
+## Screenshots
+
+### Dashboard
+
+![TaskFlow dashboard overview](screenshots/dashboard-overview.png)
+
+### Projects
+
+![TaskFlow projects list](screenshots/projects-list.png)
+
+### Kanban Board
+
+![TaskFlow board overview](screenshots/board-overview.png)
+
+### Task Creation
+
+![TaskFlow task creation](screenshots/board-task-create.png)
+
+### Drag And Drop
+
+![TaskFlow drag and drop board interaction](screenshots/board-drag-drop.png)
+
+## Demo Walkthrough
+
+Use the demo account to review the main product flow:
+
+1. Log in with `demo.owner@taskflow.dev` and `Password1`.
+2. Review the dashboard summary and analytics panels.
+3. Open the seeded project workspace.
+4. Create or inspect tasks on the Kanban board.
+5. Move tasks between lanes with drag and drop.
+6. Try task filtering and assignee controls.
+
 Working slices currently include:
 
 - auth flow
@@ -90,4 +123,4 @@ See:
 
 - add comments and activity history
 - add richer dashboard metrics
-- add more README screenshots and a short demo walkthrough
+- add a cleaner public demo reset strategy
