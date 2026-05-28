@@ -4,6 +4,15 @@
 
 This is the React frontend for `taskflow-fullstack`, the main fullstack flagship project in the portfolio.
 
+Live frontend:
+
+- https://task-flow-rho-steel.vercel.app
+
+Demo account:
+
+- Email: `demo.owner@taskflow.dev`
+- Password: `Password1`
+
 The frontend currently includes a working application shell with:
 
 - auth screens connected to the live backend
@@ -72,6 +81,7 @@ npm run build
 - Set the root directory to `taskflow-fullstack/frontend`
 - Set `VITE_API_BASE_URL` to the deployed backend URL
 - Keep `vercel.json` in place so React Router routes work on refresh
+- Current production backend: `https://taskflow-backend-yosc.onrender.com`
 
 ## What This Proves
 
@@ -83,7 +93,6 @@ npm run build
 
 ## Next Steps
 
-- add drag-and-drop Kanban interactions
-- add project member invite flow
 - add richer empty states and success feedback
 - align final visual polish with portfolio screenshots
+- add comments and activity history screens

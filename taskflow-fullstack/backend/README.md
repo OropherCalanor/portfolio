@@ -4,6 +4,10 @@
 
 This is the Spring Boot backend for `taskflow-fullstack`, the flagship fullstack project in this portfolio ecosystem.
 
+Live backend health check:
+
+- https://taskflow-backend-yosc.onrender.com/api/v1/auth/health
+
 The backend currently provides a working product foundation for:
 
 - JWT-based authentication
@@ -12,6 +16,7 @@ The backend currently provides a working product foundation for:
 - project board data
 - dashboard summary data
 - project member lookup for assignee workflows
+- seeded demo workspace for recruiter walkthroughs
 
 ## Tech Stack
 
@@ -37,6 +42,8 @@ The backend currently provides a working product foundation for:
 - dashboard summary, assigned tasks, and upcoming deadlines
 - centralized exception handling
 - integration test coverage across auth, projects, tasks, and dashboard
+- deployed Render runtime connected to hosted PostgreSQL
+- CORS support for Vercel production and preview domains
 
 ## Architecture
 
@@ -71,10 +78,10 @@ cd backend
 - real frontend-backend integration readiness
 - task and project workflow modeling
 - recruiter-friendly backend implementation quality
+- deployment-ready Spring Boot configuration
 
 ## Next Steps
 
-- add project member invite / add-member flow
-- add PostgreSQL-first runtime verification path for the full app
 - add richer dashboard metrics
 - add Swagger screenshots and example requests for the final repo presentation
+- add Flyway migrations for stronger production database control

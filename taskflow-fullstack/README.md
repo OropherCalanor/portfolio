@@ -22,7 +22,17 @@ The goal is to prove fullstack architecture, product thinking, and implementatio
 
 ## Current Status
 
-`TaskFlow` is now in a strong `in-progress` state.
+`TaskFlow` is now a deployed portfolio flagship project.
+
+Live demo:
+
+- Frontend: https://task-flow-rho-steel.vercel.app
+- Backend health: https://taskflow-backend-yosc.onrender.com/api/v1/auth/health
+
+Demo account:
+
+- Email: `demo.owner@taskflow.dev`
+- Password: `Password1`
 
 Working slices currently include:
 
@@ -34,6 +44,7 @@ Working slices currently include:
 - assignee controls
 - dashboard refresh and summary cards
 - optional demo seed for recruiter walkthroughs
+- deployed frontend, backend, and hosted PostgreSQL database
 
 ## Project Structure
 
@@ -77,6 +88,6 @@ See:
 
 ## Next Steps
 
-- deployment execution using the plan in [DEPLOYMENT_PLAN.md](/Users/ruhatkaratas/Documents/Portfolio%20Website/taskflow-fullstack/DEPLOYMENT_PLAN.md:1)
-- demo seed data for live reviewer walkthroughs
-- final README polish and live demo link
+- add comments and activity history
+- add richer dashboard metrics
+- add more README screenshots and a short demo walkthrough

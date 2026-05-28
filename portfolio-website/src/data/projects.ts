@@ -196,8 +196,9 @@ export const projects: Project[] = [
     category: 'fullstack',
     tier: 'flagship',
     githubUrl: 'https://github.com/OropherCalanor/portfolio/tree/main/taskflow-fullstack',
+    liveUrl: 'https://task-flow-rho-steel.vercel.app',
     featured: true,
-    status: 'in-progress',
+    status: 'completed',
     whatItProves: [
       'End-to-end fullstack architecture',
       'Frontend-backend integration',
@@ -242,6 +243,8 @@ export const projects: Project[] = [
     verification: [
       'Backend integration tests cover auth, projects, tasks, and dashboard modules',
       'Frontend production build passes with live API service integration',
+      'Deployed with Vercel frontend, Render backend, and Supabase Postgres',
+      'Live demo verified with seeded reviewer account and working dashboard access',
       'Local browser flow verified for login, project creation, task creation, drag-and-drop status movement, assignee controls, and dashboard refresh behavior',
       'CORS, task due-date normalization, and member-management flow were debugged and fixed in live local runs',
     ],
@@ -249,6 +252,7 @@ export const projects: Project[] = [
       'Separated backend and frontend folders with dedicated READMEs plus a top-level product README',
       'Feature-based backend structure and authenticated React shell',
       'Board view demonstrates real product workflows instead of static placeholder UI',
+      'Deployment setup documents Vercel, Render, Supabase, CORS, and demo seed strategy',
       'Case study is supported by real milestones, commits, and verified slices rather than aspirational planning only',
     ],
     screenshots: [
@@ -294,15 +298,15 @@ export const projects: Project[] = [
       },
     ],
     nextMilestones: [
-      'Add richer project member invite and management flows',
-      'Expand dashboard analytics with stronger visual breakdowns and higher-level delivery indicators',
-      'Prepare screenshots, README polish, and deployment planning for the finished flagship presentation',
+      'Add comments and activity history to make collaboration more realistic',
+      'Add stronger dashboard analytics and delivery indicators',
+      'Add a polished public demo guide and richer README screenshots',
       'Add collaboration features such as comments, activity history, or notifications',
     ],
     futureImprovements: [
       'Add comments and activity history',
       'Add notifications and richer collaboration workflow',
-      'Add deployment and demo seed strategy',
+      'Add stronger production hardening around migrations and observability',
     ],
   },
   {
