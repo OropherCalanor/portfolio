@@ -312,35 +312,70 @@ export const projects: Project[] = [
   {
     slug: 'commercecore-admin',
     name: 'CommerceCore Admin',
-    summary: 'A business-oriented admin panel for products, orders, customers, and stock visibility.',
+    summary: 'A business-oriented e-commerce admin panel scaffold for products, orders, customers, stock visibility, and dashboard metrics.',
     description:
-      'This planned project is designed to show business software thinking through dashboards, stock logic, and operational workflows.',
-    stack: ['Spring Boot', 'React', 'TypeScript', 'PostgreSQL', 'Recharts'],
+      'CommerceCore is now moving from blueprint into implementation. The first slice establishes a Spring Boot backend API surface and a React admin shell focused on operational business workflows rather than a customer storefront.',
+    stack: ['Java 21', 'Spring Boot', 'React', 'TypeScript', 'PostgreSQL-ready', 'Recharts'],
     category: 'fullstack',
     tier: 'flagship',
-    githubUrl: 'https://github.com/OropherCalanor',
+    githubUrl: 'https://github.com/OropherCalanor/portfolio/tree/main/commercecore-admin',
     featured: false,
-    status: 'planned',
+    status: 'in-progress',
     whatItProves: [
       'Admin dashboard design',
       'Business-oriented data modeling',
       'Analytics and reporting',
+      'Incremental fullstack product scaffolding',
     ],
     problem: 'I want to show that I can build software for real business operations, not just developer demos.',
-    solution: 'The project is planned as an e-commerce operations panel with inventory, order, and customer management.',
-    keyFeatures: ['Product management', 'Order tracking', 'Low stock visibility', 'Sales charts'],
-    architecture: ['Planned fullstack admin architecture'],
-    databaseDesign: ['Planned product, order, stock, and customer schema'],
-    learned: [],
-    buildFocus:
-      'This project is planned as a business-oriented flagship app that strengthens the portfolio beyond general developer tooling and shows operational product thinking.',
-    nextMilestones: [
-      'Design the product, category, customer, and order schema',
-      'Define admin dashboard metrics and stock movement logic',
-      'Build backend CRUD modules and analytics endpoints',
-      'Implement dashboard views, charts, and low-stock reporting UI',
+    solution:
+      'I started CommerceCore as an e-commerce operations dashboard with product, category, customer, order, stock movement, and dashboard modules. The first version prioritizes clean API boundaries and a recruiter-readable admin UI shell before adding deeper business logic.',
+    keyFeatures: [
+      'Product, category, and customer CRUD API surface',
+      'Order creation and status update API surface',
+      'Dashboard summary endpoint',
+      'Stock movement listing endpoint',
+      'Static React admin shell with KPI cards, charting, and table-first module views',
     ],
-    futureImprovements: ['Implementation planned after TaskFlow'],
+    architecture: [
+      'Feature-based Spring Boot backend packages for product, category, customer, order, stock, dashboard, and common concerns',
+      'PostgreSQL-ready dev profile with H2-backed test profile',
+      'React and TypeScript frontend organized as an admin workspace shell',
+      'Recharts dashboard chart split into a dedicated production chunk',
+    ],
+    databaseDesign: [
+      'Products belong to optional categories and track stock, low-stock thresholds, price, SKU, and active state',
+      'Customers are modeled separately from orders for repeat-purchase and lifetime-value reporting',
+      'Orders contain line items with product references, quantity, unit price, and calculated line totals',
+      'Stock movements are separated so inventory history can grow beyond the current product quantity field',
+    ],
+    learned: [
+      'How to define a business/admin product around operational workflows before adding a storefront',
+      'How to keep the first implementation slice small while still proving backend modules, API endpoints, tests, and UI direction',
+    ],
+    buildFocus:
+      'This project strengthens the portfolio beyond generic CRUD and project management apps by showing business/admin software thinking with inventory, orders, customers, dashboard metrics, and table-heavy workflows.',
+    nextMilestones: [
+      'Add service layers and DTO responses for every module',
+      'Add Docker Compose with PostgreSQL',
+      'Connect the React shell to backend endpoints',
+      'Add seeded demo data, screenshots, and a stronger case study',
+    ],
+    verification: [
+      'Backend context-load and product controller integration tests are part of the scaffold',
+      'Frontend production build validates the static admin UI shell',
+    ],
+    repositoryHighlights: [
+      'Dedicated blueprint documents v1 scope and API surface',
+      'Backend and frontend are scaffolded inside the monorepo for the first implementation milestone',
+      'README frames the project as an e-commerce admin dashboard, not a storefront clone',
+    ],
+    futureImprovements: [
+      'Add authentication and admin roles',
+      'Add CSV export and richer dashboard analytics',
+      'Add stock movement creation during order fulfillment',
+      'Deploy a public demo after backend/frontend integration',
+    ],
   },
   {
     slug: 'ai-job-application-tracker',

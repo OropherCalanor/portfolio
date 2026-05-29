@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: commercecore-backend
+  profiles:
+    default: dev
+
+server:
+  port: ${APP_PORT:8090}
