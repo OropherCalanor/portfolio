@@ -76,6 +76,13 @@ Useful local URLs:
 - API base URL: `http://localhost:8090/api/v1`
 - Swagger UI: `http://localhost:8090/swagger-ui.html`
 
+Quick API checks:
+
+```bash
+curl -s http://127.0.0.1:8090/api/v1/dashboard/summary
+curl -s http://127.0.0.1:8090/api/v1/products
+```
+
 ## Frontend
 
 ```bash
@@ -91,6 +98,15 @@ npm run dev
 ```
 
 The frontend runs on `http://localhost:5175` and reads `VITE_API_BASE_URL` from `.env` when provided. If the backend is unavailable, the UI falls back to local demo data instead of breaking.
+
+## Verification Status
+
+- Backend test suite passes with H2 test profile.
+- Docker Compose starts PostgreSQL and the Spring Boot backend successfully.
+- Dev seed data loads into PostgreSQL on first startup.
+- Swagger UI is reachable from the Dockerized backend.
+- Frontend production build passes.
+- Browser smoke test confirms the frontend switches from demo fallback to `Live API data` when the backend is running.
 
 ## What This Project Proves
 

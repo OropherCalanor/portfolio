@@ -369,6 +369,8 @@ export const projects: Project[] = [
       'Backend context-load and product controller integration tests are part of the scaffold',
       'Frontend production build validates the admin UI shell and API client layer',
       'Docker Compose configuration is prepared for PostgreSQL-backed local review',
+      'Dockerized backend has been smoke-tested against seeded PostgreSQL demo data',
+      'Browser smoke test confirms the React UI switches into live API data mode',
     ],
     repositoryHighlights: [
       'Dedicated blueprint documents v1 scope and API surface',
