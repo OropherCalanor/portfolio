@@ -1,0 +1,10 @@
+.DS_Store
+**/.DS_Store
+
+# Local editor settings
+.vscode/
+
+# Build outputs
+dist/
+target/
+node_modules/

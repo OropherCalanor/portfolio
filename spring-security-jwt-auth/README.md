@@ -54,6 +54,36 @@ This project is intentionally scoped as a security foundation that can later be 
 - `ROLE_MANAGER`
 - `ROLE_USER`
 
+## Screenshots
+
+### Swagger Auth Overview
+
+![Swagger auth overview](screenshots/swagger-auth-overview.png)
+
+### Register
+
+![Register success response](screenshots/register-success-response.png)
+
+### Login
+
+![Login success response](screenshots/login-success-response.png)
+
+### Refresh Token
+
+![Refresh token response](screenshots/refresh-token-response.png)
+
+## Demo Walkthrough
+
+Use Swagger to review the core authentication flow:
+
+1. Open Swagger UI at `http://localhost:8081/swagger-ui.html`.
+2. Register a user with `POST /api/v1/auth/register`.
+3. Log in with `POST /api/v1/auth/login` and copy the returned access token.
+4. Use the refresh token with `POST /api/v1/auth/refresh`.
+5. Authorize Swagger with the access token and call a protected endpoint.
+
+Demo users can be prepared with [docs/demo-data.md](./docs/demo-data.md). The default demo password is `Password1`.
+
 ## Architecture
 
 The project uses a layered backend structure:
@@ -115,7 +145,7 @@ Default local API port:
 
 ## Demo Data
 
-You can prepare demo users and role-based screenshots using the SQL notes in [docs/demo-data.md](/Users/ruhatkaratas/Documents/Portfolio%20Website/spring-security-jwt-auth/docs/demo-data.md:1) and the script in [scripts/demo-users.sql](/Users/ruhatkaratas/Documents/Portfolio%20Website/spring-security-jwt-auth/scripts/demo-users.sql:1).
+You can prepare demo users and role-based screenshots using the SQL notes in [docs/demo-data.md](./docs/demo-data.md) and the script in [scripts/demo-users.sql](./scripts/demo-users.sql).
 
 ## Testing
 
@@ -132,9 +162,9 @@ Current verification includes:
 
 ## Documentation
 
-- OpenAPI config: [OpenApiConfig.java](/Users/ruhatkaratas/Documents/Portfolio%20Website/spring-security-jwt-auth/src/main/java/com/ruhatkaratas/authapi/config/OpenApiConfig.java:1)
-- auth service: [AuthServiceImpl.java](/Users/ruhatkaratas/Documents/Portfolio%20Website/spring-security-jwt-auth/src/main/java/com/ruhatkaratas/authapi/service/impl/AuthServiceImpl.java:1)
-- security config: [SecurityConfig.java](/Users/ruhatkaratas/Documents/Portfolio%20Website/spring-security-jwt-auth/src/main/java/com/ruhatkaratas/authapi/config/SecurityConfig.java:1)
+- OpenAPI config: [OpenApiConfig.java](./src/main/java/com/ruhatkaratas/authapi/config/OpenApiConfig.java)
+- auth service: [AuthServiceImpl.java](./src/main/java/com/ruhatkaratas/authapi/service/impl/AuthServiceImpl.java)
+- security config: [SecurityConfig.java](./src/main/java/com/ruhatkaratas/authapi/config/SecurityConfig.java)
 
 ## What I Learned
 
@@ -150,7 +180,7 @@ Current verification includes:
 - email verification flow
 - password reset flow
 - integration tests for refresh and role-specific endpoints
-- Postman collection and screenshots for recruiter-facing documentation
+- Postman collection for recruiter-facing documentation
 
 ## Author
 

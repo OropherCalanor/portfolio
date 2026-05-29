@@ -4,9 +4,9 @@ Professional Spring Boot REST API for employee, department, and position managem
 
 ## Overview
 
-This project is the first backend foundation project in the portfolio ecosystem. It is intentionally focused on doing core Spring Boot API work well: clean entity modeling, layered architecture, PostgreSQL integration, structured validation, consistent error handling, and professional project documentation.
+This project is a portfolio-ready backend application designed to demonstrate strong Spring Boot fundamentals with a clean and professional structure. It focuses on the parts recruiters and engineering teams expect to see in a real backend repository: layered architecture, DTO separation, validation, exception handling, PostgreSQL integration, Docker support, and API documentation.
 
-The goal is to present a recruiter-friendly backend repository that proves production-style API fundamentals rather than tutorial-level CRUD.
+The goal is to present a backend project that feels closer to a production-style codebase than a tutorial CRUD exercise.
 
 ## Tech Stack
 
@@ -24,15 +24,50 @@ The goal is to present a recruiter-friendly backend repository that proves produ
 
 ## Features
 
-- Employee CRUD foundation
-- Department CRUD foundation
-- Position CRUD foundation
-- PostgreSQL-ready JPA entity model
-- Base entity auditing timestamps
-- Repository layer scaffold
+- Employee CRUD
+- Department CRUD
+- Position CRUD
+- Pagination, sorting, and filtering for employees
+- Request validation with Bean Validation
+- Global exception handling
+- Standard API response format
+- Swagger / OpenAPI documentation
+- Postman collection for endpoint verification
 - Dockerized local development setup
-- Swagger/OpenAPI dependency setup
-- Postman collection for manual endpoint verification
+- Maven Wrapper support
+- Unit and integration test coverage
+
+## Screenshots
+
+### Swagger Overview
+
+![Swagger overview](screenshots/swagger-overview.png)
+
+### Departments
+
+![Departments list response](screenshots/departments-list-response.png)
+
+### Positions
+
+![Positions list response](screenshots/positions-list-response.png)
+
+### Employees
+
+![Employees list response](screenshots/employees-list-response.png)
+
+### Filtered Employees
+
+![Filtered employees response](screenshots/employees-filtered-response.png)
+
+## Demo Walkthrough
+
+Use Swagger or the included Postman collection to review the API quickly:
+
+1. Open Swagger UI at `http://localhost:8080/swagger-ui/index.html`.
+2. Run `GET /api/v1/departments` to confirm seeded departments.
+3. Run `GET /api/v1/positions` to confirm seeded positions.
+4. Run `GET /api/v1/employees` to review the employee response shape.
+5. Run `GET /api/v1/employees?status=ACTIVE` to verify filtering.
 
 ## Architecture
 
@@ -46,7 +81,7 @@ This project follows a layered architecture and starts with a strong persistence
 - `exception` for global error handling
 - `config` for application configuration
 
-The current scaffold includes the project structure, domain model, environment setup, and repository layer so the next implementation step can focus on DTOs, services, and controllers.
+This structure keeps controllers thin, business rules in services, and persistence concerns in repositories. It also makes the project easier to explain during interviews and easier to extend later.
 
 ## Database Schema
 
@@ -64,6 +99,29 @@ Relationships:
 - one employee has one position
 
 See [docs/database-schema.md](./docs/database-schema.md) for the initial schema direction.
+
+## Sample Endpoints
+
+- `GET /api/v1/departments`
+- `POST /api/v1/departments`
+- `GET /api/v1/positions`
+- `POST /api/v1/positions`
+- `GET /api/v1/employees`
+- `GET /api/v1/employees/{id}`
+- `POST /api/v1/employees`
+- `PUT /api/v1/employees/{id}`
+- `DELETE /api/v1/employees/{id}`
+
+### Employee query parameters
+
+- `page`
+- `size`
+- `sortBy`
+- `sortDir`
+- `departmentId`
+- `positionId`
+- `status`
+- `search`
 
 ## API Documentation
 
@@ -147,18 +205,38 @@ Run the test suite with the Maven Wrapper:
 ./mvnw test
 ```
 
+The project includes:
+
+- service-level unit tests
+- controller integration tests with H2 test profile
+- Docker-based application verification
+
+## Verification Status
+
+This project has been verified with:
+
+- successful Docker build
+- successful Spring Boot startup
+- successful PostgreSQL connection
+- working Swagger / OpenAPI endpoint
+- passing automated test suite
+
 ## What I Learned
 
-This repository is being built as a portfolio-quality backend foundation project, with emphasis on structure, maintainability, and recruiter-friendly documentation.
+This project helped reinforce:
+
+- how to structure a professional Spring Boot API
+- how to separate entities, DTOs, services, and controllers cleanly
+- how to validate request payloads and return consistent error responses
+- how to make a backend repository easier to run and review with Docker, Swagger, Postman, and tests
 
 ## Future Improvements
 
-- Add DTOs and mappers
-- Add services and controllers
-- Add pagination, sorting, and filtering
-- Add global exception handling
-- Add integration tests
-- Add Postman collection
+- Add database migrations with Flyway
+- Add audit logging for entity changes
+- Add more repository-level filtering tests
+- Add CI workflow with GitHub Actions
+- Add demo GIFs for the README
 
 ## Author
 

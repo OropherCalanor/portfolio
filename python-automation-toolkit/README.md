@@ -20,15 +20,23 @@ Python fits into my portfolio as a complementary engineering skill for:
 
 This makes the overall portfolio stronger without diluting the main fullstack story.
 
+For recruiters, this repo shows a different kind of engineering value than my Spring Boot projects: small tools, clean command boundaries, file processing, and practical automation around real workflows.
+
 ## Current Scope
 
 V1 currently includes three real utilities:
 
 - `file-organizer`
 - `readme-starter`
-- `job-application-csv-cleaner`
+- `csv-cleaner`
 
 These commands help with file organization, portfolio-ready documentation setup, and lightweight data cleanup for job tracking workflows.
+
+## Utility Highlights
+
+- `file-organizer`: groups files by extension or category, supports dry runs, and skips hidden files.
+- `readme-starter`: generates a structured README from project name and stack inputs.
+- `csv-cleaner`: normalizes job application CSV headers and produces cleaner output for tracking workflows.
 
 ## Tech Stack
 
@@ -53,10 +61,10 @@ These commands help with file organization, portfolio-ready documentation setup,
 ## Example Commands
 
 ```bash
-python3 -m automation_toolkit.cli file-organizer --source ./downloads --mode extension
-python3 -m automation_toolkit.cli file-organizer --source ./downloads --mode category --dry-run
-python3 -m automation_toolkit.cli readme-starter --project-name "TaskFlow API" --stack "Java,Spring Boot,PostgreSQL"
-python3 -m automation_toolkit.cli csv-cleaner --input ./applications.csv --output ./applications-clean.csv
+PYTHONPATH=src python3 -m automation_toolkit.cli file-organizer --source ./examples/sample-inputs/files-demo --mode extension --dry-run
+PYTHONPATH=src python3 -m automation_toolkit.cli file-organizer --source ./examples/sample-inputs/files-demo --mode category --dry-run
+PYTHONPATH=src python3 -m automation_toolkit.cli readme-starter --project-name "TaskFlow API" --stack "Java,Spring Boot,PostgreSQL"
+PYTHONPATH=src python3 -m automation_toolkit.cli csv-cleaner --input ./examples/sample-inputs/job-applications.csv --output ./examples/sample-outputs/job-applications.cleaned.csv
 ```
 
 ## Project Structure
@@ -89,6 +97,8 @@ python3 -m unittest discover -s tests
 - sample inputs live in `examples/sample-inputs`
 - sample outputs live in `examples/sample-outputs`
 - command walkthroughs live in `docs/usage-examples.md`
+- generated README example: `examples/sample-outputs/README.generated.md`
+- cleaned CSV example: `examples/sample-outputs/job-applications.cleaned.csv`
 
 ## What I Learned
 
