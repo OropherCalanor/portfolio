@@ -1,10 +1,16 @@
 import { demoData } from '../adminData';
 import type {
   AdminDashboardData,
-  CustomerRow,
-  OrderRow,
-  ProductRow,
-  StockMovementRow,
+  CategoryResponse,
+  CreateOrderRequest,
+  CustomerRequest,
+  CustomerResponse,
+  DashboardSummaryResponse,
+  OrderResponse,
+  OrderStatus,
+  ProductRequest,
+  ProductResponse,
+  StockMovementResponse,
 } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8090/api/v1';
@@ -16,44 +22,10 @@ type ApiResponse<T> = {
   timestamp: string;
 };
 
-type DashboardSummaryResponse = {
-  productCount: number;
-  customerCount: number;
-  orderCount: number;
-  lowStockProductCount: number;
-};
-
-type ProductResponse = {
-  sku: string;
-  name: string;
-  stockQuantity: number;
-  lowStockThreshold: number;
-  categoryName: string | null;
-};
-
-type OrderResponse = {
-  orderNumber: string;
-  status: string;
-  totalAmount: number;
-  customerName: string;
-};
-
-type CustomerResponse = {
-  firstName: string;
-  lastName: string;
-  email: string;
-};
-
-type StockMovementResponse = {
-  productName: string;
-  type: string;
-  quantity: number;
-  note: string;
-};
-
 export async function loadCommerceCoreData(): Promise<AdminDashboardData> {
-  const [summary, products, orders, customers, stockMovements] = await Promise.all([
+  const [summary, categories, products, orders, customers, stockMovements] = await Promise.all([
     get<DashboardSummaryResponse>('/dashboard/summary'),
+    get<CategoryResponse[]>('/categories'),
     get<ProductResponse[]>('/products'),
     get<OrderResponse[]>('/orders'),
     get<CustomerResponse[]>('/customers'),
@@ -68,18 +40,71 @@ export async function loadCommerceCoreData(): Promise<AdminDashboardData> {
       { label: 'Customers', value: summary.customerCount.toString(), trend: 'active accounts' },
     ],
     revenueSeries: demoData.revenueSeries,
-    products: products.map(toProductRow),
-    orders: orders.map(toOrderRow),
-    customers: customers.map(toCustomerRow),
-    stockMovements: stockMovements.map(toStockMovementRow),
+    categories,
+    products,
+    orders,
+    customers,
+    stockMovements,
   };
 }
 
+export function createProduct(request: ProductRequest): Promise<ProductResponse> {
+  return post<ProductRequest, ProductResponse>('/products', request);
+}
+
+export function updateProduct(id: number, request: ProductRequest): Promise<ProductResponse> {
+  return put<ProductRequest, ProductResponse>(`/products/${id}`, request);
+}
+
+export function deleteProduct(id: number): Promise<void> {
+  return del(`/products/${id}`);
+}
+
+export function createCustomer(request: CustomerRequest): Promise<CustomerResponse> {
+  return post<CustomerRequest, CustomerResponse>('/customers', request);
+}
+
+export function createOrder(request: CreateOrderRequest): Promise<OrderResponse> {
+  return post<CreateOrderRequest, OrderResponse>('/orders', request);
+}
+
+export function updateOrderStatus(id: number, status: OrderStatus): Promise<OrderResponse> {
+  return put<{ status: OrderStatus }, OrderResponse>(`/orders/${id}`, { status });
+}
+
 async function get<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`);
+  return request<T>(path);
+}
+
+async function post<TBody, TResponse>(path: string, body: TBody): Promise<TResponse> {
+  return request<TResponse>(path, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+}
+
+async function put<TBody, TResponse>(path: string, body: TBody): Promise<TResponse> {
+  return request<TResponse>(path, {
+    method: 'PUT',
+    body: JSON.stringify(body),
+  });
+}
+
+async function del(path: string): Promise<void> {
+  await request<null>(path, { method: 'DELETE' });
+}
+
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...init?.headers,
+    },
+  });
 
   if (!response.ok) {
-    throw new Error(`CommerceCore API request failed: ${response.status}`);
+    throw new Error(await getErrorMessage(response));
   }
 
   const body = (await response.json()) as ApiResponse<T>;
@@ -91,66 +116,11 @@ async function get<T>(path: string): Promise<T> {
   return body.data;
 }
 
-function toProductRow(product: ProductResponse): ProductRow {
-  return {
-    sku: product.sku,
-    name: product.name,
-    category: product.categoryName ?? 'Uncategorized',
-    stock: product.stockQuantity,
-    status: getStockStatus(product.stockQuantity, product.lowStockThreshold),
-  };
-}
-
-function toOrderRow(order: OrderResponse): OrderRow {
-  return {
-    id: order.orderNumber,
-    customer: order.customerName,
-    total: formatCurrency(order.totalAmount),
-    status: toTitleCase(order.status),
-  };
-}
-
-function toCustomerRow(customer: CustomerResponse): CustomerRow {
-  return {
-    name: `${customer.firstName} ${customer.lastName}`,
-    email: customer.email,
-    orders: 'API linked',
-    value: 'Coming soon',
-  };
-}
-
-function toStockMovementRow(movement: StockMovementResponse): StockMovementRow {
-  return {
-    product: movement.productName,
-    type: movement.type,
-    quantity: movement.quantity,
-    note: movement.note,
-  };
-}
-
-function getStockStatus(stockQuantity: number, lowStockThreshold: number): string {
-  if (stockQuantity <= 2) {
-    return 'Critical';
+async function getErrorMessage(response: Response): Promise<string> {
+  try {
+    const body = (await response.json()) as { message?: string };
+    return body.message ?? `CommerceCore API request failed: ${response.status}`;
+  } catch {
+    return `CommerceCore API request failed: ${response.status}`;
   }
-
-  if (stockQuantity <= lowStockThreshold) {
-    return 'Low stock';
-  }
-
-  return 'Healthy';
-}
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(value);
-}
-
-function toTitleCase(value: string): string {
-  return value
-    .toLowerCase()
-    .split('_')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
 }

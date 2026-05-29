@@ -6,7 +6,7 @@ Business-oriented e-commerce admin panel for products, customers, orders, stock 
 
 `commercecore-admin` is the next flagship fullstack project in this portfolio ecosystem. It focuses on operational software rather than a customer storefront, showing how business workflows can be modeled through backend APIs and admin-focused frontend screens.
 
-The current milestone includes a Spring Boot backend with real domain modules, Swagger documentation, Dockerized PostgreSQL support, seeded demo data, and a React admin shell that can read from the live API with a demo-data fallback.
+The current milestone includes a Spring Boot backend with service-layer modules, Swagger documentation, Dockerized PostgreSQL support, seeded demo data, and a React admin workspace that supports live product CRUD, customer creation, order creation, and order status updates.
 
 ## Tech Stack
 
@@ -17,17 +17,19 @@ The current milestone includes a Spring Boot backend with real domain modules, S
 
 ## Current Features
 
-- Product, category, customer, order, stock, and dashboard backend modules
+- Product, category, customer, order, stock, and dashboard backend modules with service-layer business logic
 - Product, category, and customer CRUD endpoints
 - Basic order creation and status update endpoints
-- DTO-based product, order, and stock movement responses
+- DTO-based category, product, customer, order, and stock movement responses
 - Dashboard summary endpoint
 - Stock movement listing endpoint
 - Swagger/OpenAPI documentation
 - Docker Compose setup with PostgreSQL
 - Dev seed data for reviewer walkthroughs
-- React admin UI shell with dashboard, product, customer, order, and stock sections
-- Frontend API client with live API mode and demo-data fallback
+- Product create, edit, and delete UI
+- Customer create UI
+- Order create and status update UI
+- Frontend API client with live API mode, mutation refresh, and demo-data fallback
 
 ## API Surface
 
@@ -102,11 +104,17 @@ The frontend runs on `http://localhost:5175` and reads `VITE_API_BASE_URL` from 
 ## Verification Status
 
 - Backend test suite passes with H2 test profile.
+- Product create/list/update/delete flow is covered by integration tests.
+- Customer create flow is covered by an integration test.
 - Docker Compose starts PostgreSQL and the Spring Boot backend successfully.
 - Dev seed data loads into PostgreSQL on first startup.
 - Swagger UI is reachable from the Dockerized backend.
 - Frontend production build passes.
 - Browser smoke test confirms the frontend switches from demo fallback to `Live API data` when the backend is running.
+
+## Screenshot Checklist
+
+Use [screenshots/README.md](./screenshots/README.md) when preparing portfolio images for this project.
 
 ## What This Project Proves
 
@@ -115,11 +123,12 @@ The frontend runs on `http://localhost:5175` and reads `VITE_API_BASE_URL` from 
 - Spring Boot module organization
 - React admin UI structure with API integration boundaries
 - Dockerized local development
+- tested fullstack CRUD workflow design
 - portfolio growth beyond generic CRUD apps
 
 ## Future Improvements
 
 - screenshots and portfolio case study
 - authentication and admin roles
-- deeper service-layer business logic
 - CSV export and richer analytics
+- stock movement creation during order fulfillment

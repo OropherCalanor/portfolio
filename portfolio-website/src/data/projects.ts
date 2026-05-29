@@ -312,9 +312,9 @@ export const projects: Project[] = [
   {
     slug: 'commercecore-admin',
     name: 'CommerceCore Admin',
-    summary: 'A business-oriented e-commerce admin panel scaffold for products, orders, customers, stock visibility, and dashboard metrics.',
+    summary: 'A business-oriented e-commerce admin panel with live product CRUD, customer creation, order workflows, stock visibility, and dashboard metrics.',
     description:
-      'CommerceCore is now moving from blueprint into implementation. The current slice establishes a Spring Boot backend API surface, Swagger docs, Dockerized PostgreSQL support, seeded demo data, and a React admin shell that can read from live endpoints with a demo fallback.',
+      'CommerceCore is now a working fullstack admin slice. The current version combines service-layer Spring Boot modules, DTO-based API responses, Swagger docs, Dockerized PostgreSQL support, seeded demo data, and a React admin workspace for product CRUD, customer creation, order creation, and status updates.',
     stack: ['Java 21', 'Spring Boot', 'React', 'TypeScript', 'PostgreSQL-ready', 'Recharts'],
     category: 'fullstack',
     tier: 'flagship',
@@ -325,11 +325,11 @@ export const projects: Project[] = [
       'Admin dashboard design',
       'Business-oriented data modeling',
       'Analytics and reporting',
-      'Incremental fullstack product scaffolding',
+      'Fullstack CRUD and workflow integration',
     ],
     problem: 'I want to show that I can build software for real business operations, not just developer demos.',
     solution:
-      'I started CommerceCore as an e-commerce operations dashboard with product, category, customer, order, stock movement, and dashboard modules. The first version prioritizes clean API boundaries and a recruiter-readable admin UI shell before adding deeper business logic.',
+      'I built CommerceCore as an e-commerce operations dashboard with product, category, customer, order, stock movement, and dashboard modules. The current version prioritizes clean service boundaries, DTO responses, live API-backed management forms, and a recruiter-readable admin UI before adding authentication.',
     keyFeatures: [
       'Product, category, and customer CRUD API surface',
       'Order creation and status update API surface',
@@ -338,10 +338,14 @@ export const projects: Project[] = [
       'Swagger/OpenAPI documentation',
       'Docker Compose setup with PostgreSQL',
       'Seeded demo data for reviewer walkthroughs',
-      'React admin shell with KPI cards, charting, table-first module views, and live API fallback handling',
+      'Product create, edit, and delete UI',
+      'Customer create UI',
+      'Order create and status update UI',
+      'React admin workspace with KPI cards, charting, table-first module views, mutation refresh, and live API fallback handling',
     ],
     architecture: [
       'Feature-based Spring Boot backend packages for product, category, customer, order, stock, dashboard, and common concerns',
+      'Service-layer business logic keeps controllers focused on HTTP request and response handling',
       'PostgreSQL-ready dev profile with H2-backed test profile',
       'Docker Compose runs PostgreSQL and the Spring Boot backend together',
       'React and TypeScript frontend organized as an admin workspace shell with a dedicated API service layer',
@@ -360,21 +364,20 @@ export const projects: Project[] = [
     buildFocus:
       'This project strengthens the portfolio beyond generic CRUD and project management apps by showing business/admin software thinking with inventory, orders, customers, dashboard metrics, and table-heavy workflows.',
     nextMilestones: [
-      'Add service layers and DTO responses for every module',
-      'Add create/update forms to the frontend',
-      'Add screenshots and a stronger case study',
+      'Capture final screenshots for the portfolio gallery',
+      'Add a stronger case study page with business workflow screenshots',
       'Add authentication and role-based admin access after the core workflows are stable',
     ],
     verification: [
-      'Backend context-load and product controller integration tests are part of the scaffold',
-      'Frontend production build validates the admin UI shell and API client layer',
+      'Backend context-load, product CRUD, and customer creation integration tests validate the API slice',
+      'Frontend production build validates the admin UI shell, API client layer, and management forms',
       'Docker Compose configuration is prepared for PostgreSQL-backed local review',
       'Dockerized backend has been smoke-tested against seeded PostgreSQL demo data',
       'Browser smoke test confirms the React UI switches into live API data mode',
     ],
     repositoryHighlights: [
       'Dedicated blueprint documents v1 scope and API surface',
-      'Backend and frontend are scaffolded inside the monorepo with Docker, Swagger, and seeded data',
+      'Backend and frontend are implemented inside the monorepo with Docker, Swagger, service layer, and seeded data',
       'README frames the project as an e-commerce admin dashboard, not a storefront clone',
       'Frontend gracefully falls back to demo data when the API is not running',
     ],
