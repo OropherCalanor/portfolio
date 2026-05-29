@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Area,
   AreaChart,
@@ -7,9 +8,44 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { customers, kpis, orders, products, revenueSeries, stockMovements } from './adminData';
+import { demoData } from './adminData';
+import { loadCommerceCoreData } from './services/api';
+import type { AdminDashboardData } from './types';
+
+type ApiState = 'loading' | 'live' | 'fallback';
 
 function App() {
+  const [dashboardData, setDashboardData] = useState<AdminDashboardData>(demoData);
+  const [apiState, setApiState] = useState<ApiState>('loading');
+
+  useEffect(() => {
+    let shouldUpdate = true;
+
+    loadCommerceCoreData()
+      .then((data) => {
+        if (!shouldUpdate) {
+          return;
+        }
+
+        setDashboardData(data);
+        setApiState('live');
+      })
+      .catch(() => {
+        if (!shouldUpdate) {
+          return;
+        }
+
+        setDashboardData(demoData);
+        setApiState('fallback');
+      });
+
+    return () => {
+      shouldUpdate = false;
+    };
+  }, []);
+
+  const { kpis, revenueSeries, products, orders, customers, stockMovements } = dashboardData;
+
   return (
     <main className="app-shell">
       <aside className="sidebar">
@@ -40,6 +76,7 @@ function App() {
             <span>Backend API</span>
             <strong>/api/v1</strong>
             <small>Products, customers, orders, stock, dashboard</small>
+            <ApiStatus state={apiState} />
           </div>
         </header>
 
@@ -125,6 +162,16 @@ function App() {
       </section>
     </main>
   );
+}
+
+function ApiStatus({ state }: { state: ApiState }) {
+  const label = {
+    loading: 'Connecting to API',
+    live: 'Live API data',
+    fallback: 'Demo data fallback',
+  }[state];
+
+  return <span className={`api-state api-state-${state}`}>{label}</span>;
 }
 
 type DataTableProps = {

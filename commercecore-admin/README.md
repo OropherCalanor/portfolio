@@ -6,14 +6,14 @@ Business-oriented e-commerce admin panel for products, customers, orders, stock 
 
 `commercecore-admin` is the next flagship fullstack project in this portfolio ecosystem. It focuses on operational software rather than a customer storefront, showing how business workflows can be modeled through backend APIs and admin-focused frontend screens.
 
-The first milestone includes a Spring Boot backend scaffold with real domain modules and a React admin shell that presents the intended dashboard, product, customer, order, and stock views.
+The current milestone includes a Spring Boot backend with real domain modules, Swagger documentation, Dockerized PostgreSQL support, seeded demo data, and a React admin shell that can read from the live API with a demo-data fallback.
 
 ## Tech Stack
 
 - Backend: Java 21, Spring Boot, Spring Data JPA, Bean Validation
-- Frontend: React, TypeScript, Vite
-- Database: PostgreSQL-ready configuration with H2 test profile
-- Tooling: Maven Wrapper, npm
+- Frontend: React, TypeScript, Vite, Recharts
+- Database: PostgreSQL with H2 test profile
+- Tooling: Maven Wrapper, npm, Docker Compose, Swagger/OpenAPI
 
 ## Current Features
 
@@ -23,7 +23,11 @@ The first milestone includes a Spring Boot backend scaffold with real domain mod
 - DTO-based product, order, and stock movement responses
 - Dashboard summary endpoint
 - Stock movement listing endpoint
+- Swagger/OpenAPI documentation
+- Docker Compose setup with PostgreSQL
+- Dev seed data for reviewer walkthroughs
 - React admin UI shell with dashboard, product, customer, order, and stock sections
+- Frontend API client with live API mode and demo-data fallback
 
 ## API Surface
 
@@ -60,6 +64,18 @@ cd backend
 ./mvnw -q test
 ```
 
+Run the backend locally against PostgreSQL:
+
+```bash
+cd ..
+docker compose up --build
+```
+
+Useful local URLs:
+
+- API base URL: `http://localhost:8090/api/v1`
+- Swagger UI: `http://localhost:8090/swagger-ui.html`
+
 ## Frontend
 
 ```bash
@@ -68,20 +84,26 @@ npm install
 npm run build
 ```
 
-The current frontend milestone is a static admin shell. Backend integration will be added after the first API endpoints and demo data are stable.
+Run the frontend locally:
+
+```bash
+npm run dev
+```
+
+The frontend runs on `http://localhost:5175` and reads `VITE_API_BASE_URL` from `.env` when provided. If the backend is unavailable, the UI falls back to local demo data instead of breaking.
 
 ## What This Project Proves
 
 - business-oriented domain modeling
 - admin dashboard thinking
 - Spring Boot module organization
-- React admin UI structure
+- React admin UI structure with API integration boundaries
+- Dockerized local development
 - portfolio growth beyond generic CRUD apps
 
 ## Future Improvements
 
-- Docker Compose with PostgreSQL
-- Recharts dashboard analytics
-- seeded demo data
 - screenshots and portfolio case study
 - authentication and admin roles
+- deeper service-layer business logic
+- CSV export and richer analytics

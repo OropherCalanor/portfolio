@@ -314,7 +314,7 @@ export const projects: Project[] = [
     name: 'CommerceCore Admin',
     summary: 'A business-oriented e-commerce admin panel scaffold for products, orders, customers, stock visibility, and dashboard metrics.',
     description:
-      'CommerceCore is now moving from blueprint into implementation. The first slice establishes a Spring Boot backend API surface and a React admin shell focused on operational business workflows rather than a customer storefront.',
+      'CommerceCore is now moving from blueprint into implementation. The current slice establishes a Spring Boot backend API surface, Swagger docs, Dockerized PostgreSQL support, seeded demo data, and a React admin shell that can read from live endpoints with a demo fallback.',
     stack: ['Java 21', 'Spring Boot', 'React', 'TypeScript', 'PostgreSQL-ready', 'Recharts'],
     category: 'fullstack',
     tier: 'flagship',
@@ -335,12 +335,16 @@ export const projects: Project[] = [
       'Order creation and status update API surface',
       'Dashboard summary endpoint',
       'Stock movement listing endpoint',
-      'Static React admin shell with KPI cards, charting, and table-first module views',
+      'Swagger/OpenAPI documentation',
+      'Docker Compose setup with PostgreSQL',
+      'Seeded demo data for reviewer walkthroughs',
+      'React admin shell with KPI cards, charting, table-first module views, and live API fallback handling',
     ],
     architecture: [
       'Feature-based Spring Boot backend packages for product, category, customer, order, stock, dashboard, and common concerns',
       'PostgreSQL-ready dev profile with H2-backed test profile',
-      'React and TypeScript frontend organized as an admin workspace shell',
+      'Docker Compose runs PostgreSQL and the Spring Boot backend together',
+      'React and TypeScript frontend organized as an admin workspace shell with a dedicated API service layer',
       'Recharts dashboard chart split into a dedicated production chunk',
     ],
     databaseDesign: [
@@ -357,18 +361,20 @@ export const projects: Project[] = [
       'This project strengthens the portfolio beyond generic CRUD and project management apps by showing business/admin software thinking with inventory, orders, customers, dashboard metrics, and table-heavy workflows.',
     nextMilestones: [
       'Add service layers and DTO responses for every module',
-      'Add Docker Compose with PostgreSQL',
-      'Connect the React shell to backend endpoints',
-      'Add seeded demo data, screenshots, and a stronger case study',
+      'Add create/update forms to the frontend',
+      'Add screenshots and a stronger case study',
+      'Add authentication and role-based admin access after the core workflows are stable',
     ],
     verification: [
       'Backend context-load and product controller integration tests are part of the scaffold',
-      'Frontend production build validates the static admin UI shell',
+      'Frontend production build validates the admin UI shell and API client layer',
+      'Docker Compose configuration is prepared for PostgreSQL-backed local review',
     ],
     repositoryHighlights: [
       'Dedicated blueprint documents v1 scope and API surface',
-      'Backend and frontend are scaffolded inside the monorepo for the first implementation milestone',
+      'Backend and frontend are scaffolded inside the monorepo with Docker, Swagger, and seeded data',
       'README frames the project as an e-commerce admin dashboard, not a storefront clone',
+      'Frontend gracefully falls back to demo data when the API is not running',
     ],
     futureImprovements: [
       'Add authentication and admin roles',

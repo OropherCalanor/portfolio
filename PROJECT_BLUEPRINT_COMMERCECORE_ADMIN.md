@@ -55,17 +55,21 @@ The goal is to prove that I can model operational business data, build admin wor
 
 ## First Milestone
 
-The first implementation slice should prove the architecture is real:
+The first implementation slice now proves the architecture is real:
 
 - backend context-load test
 - one product controller integration test
 - frontend production build
+- Swagger/OpenAPI documentation
+- Docker Compose with PostgreSQL
+- seeded demo data for reviewer walkthroughs
+- frontend API client with fallback demo data
 - README explaining purpose, stack, features, and current status
 
 ## Future Milestones
 
-- add Docker Compose with PostgreSQL
-- add charts with Recharts
-- add seeded demo data
 - add dashboard screenshots
 - add portfolio case study content
+- connect create/update forms to backend endpoints
+- add service-layer business rules
+- add authentication and admin roles
