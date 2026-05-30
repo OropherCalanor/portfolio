@@ -4,6 +4,9 @@ import com.ruhatkaratas.commercecore.customer.Customer;
 import com.ruhatkaratas.commercecore.customer.CustomerRepository;
 import com.ruhatkaratas.commercecore.product.Product;
 import com.ruhatkaratas.commercecore.product.ProductRepository;
+import com.ruhatkaratas.commercecore.stock.StockMovement;
+import com.ruhatkaratas.commercecore.stock.StockMovementRepository;
+import com.ruhatkaratas.commercecore.stock.StockMovementType;
 import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,6 +23,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
+    private final StockMovementRepository stockMovementRepository;
 
     public List<OrderResponse> list() {
         return orderRepository.findAll().stream().map(this::toResponse).toList();
@@ -53,7 +57,29 @@ public class OrderService {
         CustomerOrder order = orderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
         order.setStatus(request.status());
+        if (request.status() == OrderStatus.FULFILLED && !order.isStockDeducted()) {
+            deductStockForFulfillment(order);
+            order.setStockDeducted(true);
+        }
         return toResponse(orderRepository.save(order));
+    }
+
+    private void deductStockForFulfillment(CustomerOrder order) {
+        for (OrderItem item : order.getItems()) {
+            Product product = item.getProduct();
+            int nextStockQuantity = product.getStockQuantity() - item.getQuantity();
+            if (nextStockQuantity < 0) {
+                throw new IllegalArgumentException("Order cannot be fulfilled because product stock is too low");
+            }
+            product.setStockQuantity(nextStockQuantity);
+
+            StockMovement movement = new StockMovement();
+            movement.setProduct(product);
+            movement.setType(StockMovementType.OUT);
+            movement.setQuantity(item.getQuantity());
+            movement.setNote("Order fulfillment: " + order.getOrderNumber());
+            stockMovementRepository.save(movement);
+        }
     }
 
     private OrderResponse toResponse(CustomerOrder order) {

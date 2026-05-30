@@ -6,7 +6,7 @@ Business-oriented e-commerce admin panel for products, customers, orders, stock 
 
 `commercecore-admin` is the next flagship fullstack project in this portfolio ecosystem. It focuses on operational software rather than a customer storefront, showing how business workflows can be modeled through backend APIs and admin-focused frontend screens.
 
-The current milestone includes a Spring Boot backend with service-layer modules, Swagger documentation, Dockerized PostgreSQL support, seeded demo data, and a React admin workspace that supports live product CRUD, category management, customer management, order creation, and order status updates.
+The current milestone includes a Spring Boot backend with service-layer modules, Swagger documentation, Dockerized PostgreSQL support, seeded demo data, and a React admin workspace that supports live product CRUD, category management, customer management, order creation, order status updates, and inventory deduction during fulfillment.
 
 ## Tech Stack
 
@@ -19,7 +19,7 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 
 - Product, category, customer, order, stock, and dashboard backend modules with service-layer business logic
 - Product, category, and customer CRUD endpoints
-- Basic order creation and status update endpoints
+- Order creation and status update endpoints with fulfillment stock deduction
 - DTO-based category, product, customer, order, and stock movement responses
 - Dashboard summary endpoint
 - Stock movement listing and creation endpoints
@@ -111,6 +111,7 @@ The frontend runs on `http://localhost:5175` and reads `VITE_API_BASE_URL` from 
 - Category create/update/delete flow is covered by an integration test.
 - Customer create/update/delete flow is covered by integration tests.
 - Stock movement creation and negative-stock protection are covered by integration tests.
+- Order fulfillment stock deduction and duplicate-deduction protection are covered by integration tests.
 - Docker Compose starts PostgreSQL and the Spring Boot backend successfully.
 - Dev seed data loads into PostgreSQL on first startup.
 - Swagger UI is reachable from the Dockerized backend.
@@ -136,4 +137,4 @@ Use [screenshots/README.md](./screenshots/README.md) when preparing portfolio im
 - screenshots and portfolio case study
 - authentication and admin roles
 - CSV export and richer analytics
-- automatic stock movement creation during order fulfillment
+- delivery/shipping workflow after order fulfillment

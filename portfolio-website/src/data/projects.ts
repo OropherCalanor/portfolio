@@ -314,7 +314,7 @@ export const projects: Project[] = [
     name: 'CommerceCore Admin',
     summary: 'A business-oriented e-commerce admin panel with live product, category, customer, and order workflows plus stock visibility and dashboard metrics.',
     description:
-      'CommerceCore is now a working fullstack admin slice. The current version combines service-layer Spring Boot modules, DTO-based API responses, Swagger docs, Dockerized PostgreSQL support, seeded demo data, and a React admin workspace for product CRUD, category management, customer management, order creation, and status updates.',
+      'CommerceCore is now a working fullstack admin slice. The current version combines service-layer Spring Boot modules, DTO-based API responses, Swagger docs, Dockerized PostgreSQL support, seeded demo data, and a React admin workspace for product CRUD, category management, customer management, order creation, status updates, and inventory deduction during fulfillment.',
     stack: ['Java 21', 'Spring Boot', 'React', 'TypeScript', 'PostgreSQL-ready', 'Recharts'],
     category: 'fullstack',
     tier: 'flagship',
@@ -332,7 +332,7 @@ export const projects: Project[] = [
       'I built CommerceCore as an e-commerce operations dashboard with product, category, customer, order, stock movement, and dashboard modules. The current version prioritizes clean service boundaries, DTO responses, live API-backed management forms, and a recruiter-readable admin UI before adding authentication.',
     keyFeatures: [
       'Product, category, and customer CRUD API surface',
-      'Order creation and status update API surface',
+      'Order creation and status update API surface with fulfillment stock deduction',
       'Dashboard summary endpoint',
       'Stock movement listing and creation endpoints',
       'Swagger/OpenAPI documentation',
@@ -357,6 +357,7 @@ export const projects: Project[] = [
       'Products belong to optional categories and track stock, low-stock thresholds, price, SKU, and active state',
       'Customers are modeled separately from orders for repeat-purchase and lifetime-value reporting',
       'Orders contain line items with product references, quantity, unit price, and calculated line totals',
+      'Fulfilled orders deduct product inventory once and create stock movement audit records',
       'Stock movements are separated from products so inventory history can grow beyond the current product quantity field',
     ],
     learned: [
@@ -371,7 +372,7 @@ export const projects: Project[] = [
       'Add authentication and role-based admin access after the core workflows are stable',
     ],
     verification: [
-      'Backend context-load, product CRUD, category CRUD, customer CRUD, and stock movement integration tests validate the API slice',
+      'Backend context-load, product CRUD, category CRUD, customer CRUD, stock movement, and fulfillment integration tests validate the API slice',
       'Frontend production build validates the admin UI shell, API client layer, and management forms',
       'Docker Compose configuration is prepared for PostgreSQL-backed local review',
       'Dockerized backend has been smoke-tested against seeded PostgreSQL demo data',
@@ -386,7 +387,7 @@ export const projects: Project[] = [
     futureImprovements: [
       'Add authentication and admin roles',
       'Add CSV export and richer dashboard analytics',
-      'Create stock movements automatically during order fulfillment',
+      'Add delivery/shipping workflow after order fulfillment',
       'Deploy a public demo after backend/frontend integration',
     ],
   },
