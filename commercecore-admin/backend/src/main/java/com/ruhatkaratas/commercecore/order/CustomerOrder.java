@@ -34,7 +34,7 @@ public class CustomerOrder extends BaseEntity {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal totalAmount = BigDecimal.ZERO;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean stockDeducted = false;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
