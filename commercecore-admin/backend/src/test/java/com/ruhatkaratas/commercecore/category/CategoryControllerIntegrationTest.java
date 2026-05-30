@@ -1,7 +1,7 @@
-package com.ruhatkaratas.commercecore.customer;
+package com.ruhatkaratas.commercecore.category;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-class CustomerControllerIntegrationTest {
+class CategoryControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -28,56 +28,42 @@ class CustomerControllerIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void createsCustomerWithResponseDto() throws Exception {
-        CustomerRequest request = new CustomerRequest(
-                "Ada",
-                "Lovelace",
-                "ada.customer@example.com",
-                "+90 555 010 2026"
+    void createsUpdatesAndDeletesCategoryWithResponseDto() throws Exception {
+        CategoryRequest createRequest = new CategoryRequest(
+                "Home Office",
+                "home-office-category",
+                "Workspace essentials",
+                true
         );
 
-        mockMvc.perform(post("/api/v1/customers")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.id").isNumber())
-                .andExpect(jsonPath("$.data.email").value("ada.customer@example.com"));
-    }
+        long categoryId = createCategory(createRequest);
 
-    @Test
-    void updatesAndDeletesCustomerWithResponseDto() throws Exception {
-        long customerId = createCustomer(new CustomerRequest(
-                "Grace",
-                "Hopper",
-                "grace.customer@example.com",
-                "+90 555 010 3030"
-        ));
-
-        CustomerRequest updateRequest = new CustomerRequest(
-                "Grace",
-                "Murray",
-                "grace.murray@example.com",
-                "+90 555 010 3031"
+        CategoryRequest updateRequest = new CategoryRequest(
+                "Remote Office",
+                "remote-office-category",
+                "Updated workspace essentials",
+                false
         );
 
-        mockMvc.perform(put("/api/v1/customers/{id}", customerId)
+        mockMvc.perform(put("/api/v1/categories/{id}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.lastName").value("Murray"))
-                .andExpect(jsonPath("$.data.email").value("grace.murray@example.com"));
+                .andExpect(jsonPath("$.data.name").value("Remote Office"))
+                .andExpect(jsonPath("$.data.slug").value("remote-office-category"))
+                .andExpect(jsonPath("$.data.active").value(false));
 
-        mockMvc.perform(delete("/api/v1/customers/{id}", customerId))
+        mockMvc.perform(delete("/api/v1/categories/{id}", categoryId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
     }
 
-    private long createCustomer(CustomerRequest request) throws Exception {
-        String response = mockMvc.perform(post("/api/v1/customers")
+    private long createCategory(CategoryRequest request) throws Exception {
+        String response = mockMvc.perform(post("/api/v1/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.id").isNumber())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();

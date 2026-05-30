@@ -7,7 +7,8 @@ Expected files:
 - `dashboard-live-api.png`
 - `products-crud-table.png`
 - `product-edit-form.png`
-- `customers-create-list.png`
+- `categories-crud-table.png`
+- `customers-crud-table.png`
 - `orders-create-form.png`
 - `orders-status-update.png`
 - `stock-movements-table.png`

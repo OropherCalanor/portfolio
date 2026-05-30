@@ -1,6 +1,7 @@
 import { demoData } from '../adminData';
 import type {
   AdminDashboardData,
+  CategoryRequest,
   CategoryResponse,
   CreateOrderRequest,
   CustomerRequest,
@@ -52,6 +53,18 @@ export function createProduct(request: ProductRequest): Promise<ProductResponse>
   return post<ProductRequest, ProductResponse>('/products', request);
 }
 
+export function createCategory(request: CategoryRequest): Promise<CategoryResponse> {
+  return post<CategoryRequest, CategoryResponse>('/categories', request);
+}
+
+export function updateCategory(id: number, request: CategoryRequest): Promise<CategoryResponse> {
+  return put<CategoryRequest, CategoryResponse>(`/categories/${id}`, request);
+}
+
+export function deleteCategory(id: number): Promise<void> {
+  return del(`/categories/${id}`);
+}
+
 export function updateProduct(id: number, request: ProductRequest): Promise<ProductResponse> {
   return put<ProductRequest, ProductResponse>(`/products/${id}`, request);
 }
@@ -62,6 +75,14 @@ export function deleteProduct(id: number): Promise<void> {
 
 export function createCustomer(request: CustomerRequest): Promise<CustomerResponse> {
   return post<CustomerRequest, CustomerResponse>('/customers', request);
+}
+
+export function updateCustomer(id: number, request: CustomerRequest): Promise<CustomerResponse> {
+  return put<CustomerRequest, CustomerResponse>(`/customers/${id}`, request);
+}
+
+export function deleteCustomer(id: number): Promise<void> {
+  return del(`/customers/${id}`);
 }
 
 export function createOrder(request: CreateOrderRequest): Promise<OrderResponse> {

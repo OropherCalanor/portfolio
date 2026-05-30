@@ -6,7 +6,7 @@ Business-oriented e-commerce admin panel for products, customers, orders, stock 
 
 `commercecore-admin` is the next flagship fullstack project in this portfolio ecosystem. It focuses on operational software rather than a customer storefront, showing how business workflows can be modeled through backend APIs and admin-focused frontend screens.
 
-The current milestone includes a Spring Boot backend with service-layer modules, Swagger documentation, Dockerized PostgreSQL support, seeded demo data, and a React admin workspace that supports live product CRUD, customer creation, order creation, and order status updates.
+The current milestone includes a Spring Boot backend with service-layer modules, Swagger documentation, Dockerized PostgreSQL support, seeded demo data, and a React admin workspace that supports live product CRUD, category management, customer management, order creation, and order status updates.
 
 ## Tech Stack
 
@@ -27,7 +27,8 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 - Docker Compose setup with PostgreSQL
 - Dev seed data for reviewer walkthroughs
 - Product create, edit, and delete UI
-- Customer create UI
+- Category create, edit, and delete UI
+- Customer create, edit, and delete UI
 - Order create and status update UI
 - Frontend API client with live API mode, mutation refresh, and demo-data fallback
 
@@ -105,7 +106,8 @@ The frontend runs on `http://localhost:5175` and reads `VITE_API_BASE_URL` from 
 
 - Backend test suite passes with H2 test profile.
 - Product create/list/update/delete flow is covered by integration tests.
-- Customer create flow is covered by an integration test.
+- Category create/update/delete flow is covered by an integration test.
+- Customer create/update/delete flow is covered by integration tests.
 - Docker Compose starts PostgreSQL and the Spring Boot backend successfully.
 - Dev seed data loads into PostgreSQL on first startup.
 - Swagger UI is reachable from the Dockerized backend.

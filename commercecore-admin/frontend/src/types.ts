@@ -19,6 +19,13 @@ export type CategoryResponse = {
   active: boolean;
 };
 
+export type CategoryRequest = {
+  name: string;
+  slug: string;
+  description: string;
+  active: boolean;
+};
+
 export type ProductResponse = {
   id: number;
   sku: string;

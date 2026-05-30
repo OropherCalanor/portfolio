@@ -10,16 +10,22 @@ import {
 } from 'recharts';
 import { demoData } from './adminData';
 import {
+  createCategory,
   createCustomer,
   createOrder,
   createProduct,
+  deleteCategory,
+  deleteCustomer,
   deleteProduct,
   loadCommerceCoreData,
+  updateCategory,
+  updateCustomer,
   updateOrderStatus,
   updateProduct,
 } from './services/api';
 import type {
   AdminDashboardData,
+  CategoryRequest,
   CategoryResponse,
   CustomerResponse,
   OrderResponse,
@@ -40,6 +46,13 @@ type ProductFormState = {
   lowStockThreshold: string;
   active: boolean;
   categoryId: string;
+};
+
+type CategoryFormState = {
+  name: string;
+  slug: string;
+  description: string;
+  active: boolean;
 };
 
 type CustomerFormState = {
@@ -66,6 +79,13 @@ const EMPTY_PRODUCT_FORM: ProductFormState = {
   categoryId: '',
 };
 
+const EMPTY_CATEGORY_FORM: CategoryFormState = {
+  name: '',
+  slug: '',
+  description: '',
+  active: true,
+};
+
 const EMPTY_CUSTOMER_FORM: CustomerFormState = {
   firstName: '',
   lastName: '',
@@ -87,7 +107,10 @@ function App() {
   const [notice, setNotice] = useState('Connecting to CommerceCore API...');
   const [isSaving, setIsSaving] = useState(false);
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
+  const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
+  const [editingCustomerId, setEditingCustomerId] = useState<number | null>(null);
   const [productForm, setProductForm] = useState<ProductFormState>(EMPTY_PRODUCT_FORM);
+  const [categoryForm, setCategoryForm] = useState<CategoryFormState>(EMPTY_CATEGORY_FORM);
   const [customerForm, setCustomerForm] = useState<CustomerFormState>(EMPTY_CUSTOMER_FORM);
   const [orderForm, setOrderForm] = useState<OrderFormState>(EMPTY_ORDER_FORM);
 
@@ -184,6 +207,60 @@ function App() {
     }
   };
 
+  const handleCategorySubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!canMutate) {
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const request = toCategoryRequest(categoryForm);
+      if (editingCategoryId === null) {
+        await createCategory(request);
+        setNotice('Category created and selectors refreshed.');
+      } else {
+        await updateCategory(editingCategoryId, request);
+        setNotice('Category updated and product selectors refreshed.');
+      }
+      setCategoryForm(EMPTY_CATEGORY_FORM);
+      setEditingCategoryId(null);
+      await refreshDashboard();
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Category operation failed.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCategoryEdit = (category: CategoryResponse) => {
+    setEditingCategoryId(category.id);
+    setCategoryForm({
+      name: category.name,
+      slug: category.slug,
+      description: category.description ?? '',
+      active: category.active,
+    });
+  };
+
+  const handleCategoryDelete = async (category: CategoryResponse) => {
+    if (!canMutate || !window.confirm(`Delete ${category.name}?`)) {
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      await deleteCategory(category.id);
+      setNotice('Category deleted and product selectors refreshed.');
+      await refreshDashboard();
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Category delete failed.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const handleCustomerSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -193,12 +270,45 @@ function App() {
 
     setIsSaving(true);
     try {
-      await createCustomer(customerForm);
+      if (editingCustomerId === null) {
+        await createCustomer(customerForm);
+        setNotice('Customer created and dashboard data refreshed.');
+      } else {
+        await updateCustomer(editingCustomerId, customerForm);
+        setNotice('Customer updated and dashboard data refreshed.');
+      }
       setCustomerForm(EMPTY_CUSTOMER_FORM);
-      setNotice('Customer created and dashboard data refreshed.');
+      setEditingCustomerId(null);
       await refreshDashboard();
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : 'Customer create failed.');
+      setNotice(error instanceof Error ? error.message : 'Customer operation failed.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCustomerEdit = (customer: CustomerResponse) => {
+    setEditingCustomerId(customer.id);
+    setCustomerForm({
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+      email: customer.email,
+      phone: customer.phone ?? '',
+    });
+  };
+
+  const handleCustomerDelete = async (customer: CustomerResponse) => {
+    if (!canMutate || !window.confirm(`Delete ${customer.firstName} ${customer.lastName}?`)) {
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      await deleteCustomer(customer.id);
+      setNotice('Customer deleted and dashboard data refreshed.');
+      await refreshDashboard();
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Customer delete failed.');
     } finally {
       setIsSaving(false);
     }
@@ -254,6 +364,7 @@ function App() {
         <nav aria-label="Admin sections">
           <a href="#dashboard">Dashboard</a>
           <a href="#products">Products</a>
+          <a href="#categories">Categories</a>
           <a href="#customers">Customers</a>
           <a href="#orders">Orders</a>
           <a href="#stock">Stock</a>
@@ -266,8 +377,8 @@ function App() {
             <p className="eyebrow">Business control center</p>
             <h2>E-commerce admin dashboard for operational decisions.</h2>
             <p>
-              V1 now supports live product CRUD, customer creation, order creation, status updates,
-              and dashboard refreshes against the Spring Boot API.
+              V1 now supports live product CRUD, category management, customer workflows, order creation,
+              status updates, and dashboard refreshes against the Spring Boot API.
             </p>
           </div>
           <div className="status-card">
@@ -338,15 +449,46 @@ function App() {
           />
         </section>
 
+        <section className="grid-two" id="categories">
+          <CategoryForm
+            canMutate={canMutate}
+            editingCategoryId={editingCategoryId}
+            form={categoryForm}
+            isSaving={isSaving}
+            onCancel={() => {
+              setEditingCategoryId(null);
+              setCategoryForm(EMPTY_CATEGORY_FORM);
+            }}
+            onChange={setCategoryForm}
+            onSubmit={handleCategorySubmit}
+          />
+          <CategoryTable
+            canMutate={canMutate}
+            categories={categories}
+            onDelete={handleCategoryDelete}
+            onEdit={handleCategoryEdit}
+          />
+        </section>
+
         <section className="grid-two" id="customers">
           <CustomerForm
             canMutate={canMutate}
+            editingCustomerId={editingCustomerId}
             form={customerForm}
             isSaving={isSaving}
+            onCancel={() => {
+              setEditingCustomerId(null);
+              setCustomerForm(EMPTY_CUSTOMER_FORM);
+            }}
             onChange={setCustomerForm}
             onSubmit={handleCustomerSubmit}
           />
-          <CustomerTable customers={customers} />
+          <CustomerTable
+            canMutate={canMutate}
+            customers={customers}
+            onDelete={handleCustomerDelete}
+            onEdit={handleCustomerEdit}
+          />
         </section>
 
         <section className="grid-two" id="orders">
@@ -557,16 +699,153 @@ function ProductTable({
   );
 }
 
-function CustomerForm({
+function CategoryForm({
   canMutate,
+  editingCategoryId,
   form,
   isSaving,
+  onCancel,
   onChange,
   onSubmit,
 }: {
   canMutate: boolean;
+  editingCategoryId: number | null;
+  form: CategoryFormState;
+  isSaving: boolean;
+  onCancel: () => void;
+  onChange: (value: CategoryFormState) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}) {
+  return (
+    <article className="panel form-panel">
+      <div className="panel-heading">
+        <p className="eyebrow">Category management</p>
+        <h3>{editingCategoryId === null ? 'Create category' : 'Edit category'}</h3>
+      </div>
+      <form className="form-grid" onSubmit={onSubmit}>
+        <label>
+          Name
+          <input
+            disabled={!canMutate}
+            onChange={(event) => onChange({ ...form, name: event.target.value, slug: slugify(event.target.value) })}
+            required
+            value={form.name}
+          />
+        </label>
+        <label>
+          Slug
+          <input
+            disabled={!canMutate}
+            onChange={(event) => onChange({ ...form, slug: event.target.value })}
+            required
+            value={form.slug}
+          />
+        </label>
+        <label className="span-two">
+          Description
+          <textarea
+            disabled={!canMutate}
+            onChange={(event) => onChange({ ...form, description: event.target.value })}
+            value={form.description}
+          />
+        </label>
+        <label className="checkbox-row span-two">
+          <input
+            checked={form.active}
+            disabled={!canMutate}
+            onChange={(event) => onChange({ ...form, active: event.target.checked })}
+            type="checkbox"
+          />
+          Active category
+        </label>
+        <div className="form-actions span-two">
+          <button disabled={!canMutate} type="submit">
+            {isSaving ? 'Saving...' : editingCategoryId === null ? 'Create category' : 'Update category'}
+          </button>
+          {editingCategoryId !== null && (
+            <button className="button-secondary" onClick={onCancel} type="button">
+              Cancel edit
+            </button>
+          )}
+        </div>
+      </form>
+    </article>
+  );
+}
+
+function CategoryTable({
+  canMutate,
+  categories,
+  onDelete,
+  onEdit,
+}: {
+  canMutate: boolean;
+  categories: CategoryResponse[];
+  onDelete: (category: CategoryResponse) => void;
+  onEdit: (category: CategoryResponse) => void;
+}) {
+  return (
+    <article className="panel table-panel">
+      <div className="panel-heading">
+        <p className="eyebrow">Catalog taxonomy</p>
+        <h3>Categories</h3>
+      </div>
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Slug</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {categories.map((category) => (
+              <tr key={category.id}>
+                <td>{category.name}</td>
+                <td>{category.slug}</td>
+                <td>
+                  <span className={`badge ${category.active ? 'badge-success' : 'badge-muted'}`}>
+                    {category.active ? 'Active' : 'Inactive'}
+                  </span>
+                </td>
+                <td className="action-cell">
+                  <button className="table-button" disabled={!canMutate} onClick={() => onEdit(category)} type="button">
+                    Edit
+                  </button>
+                  <button
+                    className="table-button danger"
+                    disabled={!canMutate}
+                    onClick={() => onDelete(category)}
+                    type="button"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </article>
+  );
+}
+
+function CustomerForm({
+  canMutate,
+  editingCustomerId,
+  form,
+  isSaving,
+  onCancel,
+  onChange,
+  onSubmit,
+}: {
+  canMutate: boolean;
+  editingCustomerId: number | null;
   form: CustomerFormState;
   isSaving: boolean;
+  onCancel: () => void;
   onChange: (value: CustomerFormState) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
@@ -574,7 +853,7 @@ function CustomerForm({
     <article className="panel form-panel">
       <div className="panel-heading">
         <p className="eyebrow">Customer management</p>
-        <h3>Create customer</h3>
+        <h3>{editingCustomerId === null ? 'Create customer' : 'Edit customer'}</h3>
       </div>
       <form className="form-grid" onSubmit={onSubmit}>
         <label>
@@ -615,15 +894,30 @@ function CustomerForm({
         </label>
         <div className="form-actions span-two">
           <button disabled={!canMutate} type="submit">
-            {isSaving ? 'Saving...' : 'Create customer'}
+            {isSaving ? 'Saving...' : editingCustomerId === null ? 'Create customer' : 'Update customer'}
           </button>
+          {editingCustomerId !== null && (
+            <button className="button-secondary" onClick={onCancel} type="button">
+              Cancel edit
+            </button>
+          )}
         </div>
       </form>
     </article>
   );
 }
 
-function CustomerTable({ customers }: { customers: CustomerResponse[] }) {
+function CustomerTable({
+  canMutate,
+  customers,
+  onDelete,
+  onEdit,
+}: {
+  canMutate: boolean;
+  customers: CustomerResponse[];
+  onDelete: (customer: CustomerResponse) => void;
+  onEdit: (customer: CustomerResponse) => void;
+}) {
   return (
     <article className="panel table-panel">
       <div className="panel-heading">
@@ -637,6 +931,7 @@ function CustomerTable({ customers }: { customers: CustomerResponse[] }) {
               <th>Name</th>
               <th>Email</th>
               <th>Phone</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -645,6 +940,19 @@ function CustomerTable({ customers }: { customers: CustomerResponse[] }) {
                 <td>{customer.firstName} {customer.lastName}</td>
                 <td>{customer.email}</td>
                 <td>{customer.phone ?? 'Not provided'}</td>
+                <td className="action-cell">
+                  <button className="table-button" disabled={!canMutate} onClick={() => onEdit(customer)} type="button">
+                    Edit
+                  </button>
+                  <button
+                    className="table-button danger"
+                    disabled={!canMutate}
+                    onClick={() => onDelete(customer)}
+                    type="button"
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -841,6 +1149,23 @@ function toProductRequest(form: ProductFormState): ProductRequest {
     active: form.active,
     categoryId: form.categoryId ? Number(form.categoryId) : null,
   };
+}
+
+function toCategoryRequest(form: CategoryFormState): CategoryRequest {
+  return {
+    name: form.name,
+    slug: form.slug || slugify(form.name),
+    description: form.description,
+    active: form.active,
+  };
+}
+
+function slugify(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
 }
 
 function getStockStatus(product: ProductResponse): { label: string; tone: string } {

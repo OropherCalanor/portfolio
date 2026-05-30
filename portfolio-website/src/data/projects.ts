@@ -312,9 +312,9 @@ export const projects: Project[] = [
   {
     slug: 'commercecore-admin',
     name: 'CommerceCore Admin',
-    summary: 'A business-oriented e-commerce admin panel with live product CRUD, customer creation, order workflows, stock visibility, and dashboard metrics.',
+    summary: 'A business-oriented e-commerce admin panel with live product, category, customer, and order workflows plus stock visibility and dashboard metrics.',
     description:
-      'CommerceCore is now a working fullstack admin slice. The current version combines service-layer Spring Boot modules, DTO-based API responses, Swagger docs, Dockerized PostgreSQL support, seeded demo data, and a React admin workspace for product CRUD, customer creation, order creation, and status updates.',
+      'CommerceCore is now a working fullstack admin slice. The current version combines service-layer Spring Boot modules, DTO-based API responses, Swagger docs, Dockerized PostgreSQL support, seeded demo data, and a React admin workspace for product CRUD, category management, customer management, order creation, and status updates.',
     stack: ['Java 21', 'Spring Boot', 'React', 'TypeScript', 'PostgreSQL-ready', 'Recharts'],
     category: 'fullstack',
     tier: 'flagship',
@@ -339,7 +339,8 @@ export const projects: Project[] = [
       'Docker Compose setup with PostgreSQL',
       'Seeded demo data for reviewer walkthroughs',
       'Product create, edit, and delete UI',
-      'Customer create UI',
+      'Category create, edit, and delete UI',
+      'Customer create, edit, and delete UI',
       'Order create and status update UI',
       'React admin workspace with KPI cards, charting, table-first module views, mutation refresh, and live API fallback handling',
     ],
@@ -369,7 +370,7 @@ export const projects: Project[] = [
       'Add authentication and role-based admin access after the core workflows are stable',
     ],
     verification: [
-      'Backend context-load, product CRUD, and customer creation integration tests validate the API slice',
+      'Backend context-load, product CRUD, category CRUD, and customer CRUD integration tests validate the API slice',
       'Frontend production build validates the admin UI shell, API client layer, and management forms',
       'Docker Compose configuration is prepared for PostgreSQL-backed local review',
       'Dockerized backend has been smoke-tested against seeded PostgreSQL demo data',
