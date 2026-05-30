@@ -92,4 +92,23 @@ export const projectScreenshotManifest: Record<string, ProjectScreenshotManifest
       'local-run-workflow.png',
     ],
   },
+  'commercecore-admin': {
+    folder: 'commercecore-admin/screenshots',
+    required: [
+      'dashboard-live-api.png',
+      'products-crud-table.png',
+      'product-edit-form.png',
+      'customers-create-list.png',
+      'orders-create-form.png',
+      'orders-status-update.png',
+      'stock-movements-table.png',
+      'swagger-overview.png',
+    ],
+    optional: [
+      'docker-containers-running.png',
+      'mobile-dashboard.png',
+      'product-validation-error.png',
+      'low-stock-state.png',
+    ],
+  },
 }
