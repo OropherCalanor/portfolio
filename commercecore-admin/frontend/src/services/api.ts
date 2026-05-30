@@ -98,6 +98,10 @@ export function updateOrderStatus(id: number, status: OrderStatus): Promise<Orde
   return put<{ status: OrderStatus }, OrderResponse>(`/orders/${id}`, { status });
 }
 
+export function getOrderExportUrl(): string {
+  return `${API_BASE_URL}/orders/export.csv`;
+}
+
 export function createStockMovement(request: StockMovementRequest): Promise<StockMovementResponse> {
   return post<StockMovementRequest, StockMovementResponse>('/stock/movements', request);
 }

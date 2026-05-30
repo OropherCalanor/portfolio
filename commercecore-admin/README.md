@@ -24,6 +24,7 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 - Dashboard summary endpoint
 - Stock movement listing and creation endpoints
 - Product CSV export endpoint
+- Order CSV export endpoint
 - Swagger/OpenAPI documentation
 - Docker Compose setup with PostgreSQL
 - Dev seed data for reviewer walkthroughs
@@ -32,6 +33,7 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 - Category create, edit, and delete UI
 - Customer create, edit, and delete UI
 - Order create and status update UI
+- Order CSV export action
 - Stock movement create UI with automatic product inventory refresh
 - Frontend API client with live API mode, mutation refresh, and demo-data fallback
 
@@ -51,6 +53,7 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 - `PUT /api/v1/customers/{id}`
 - `DELETE /api/v1/customers/{id}`
 - `GET /api/v1/orders`
+- `GET /api/v1/orders/export.csv`
 - `POST /api/v1/orders`
 - `PUT /api/v1/orders/{id}`
 - `GET /api/v1/dashboard/summary`
@@ -116,6 +119,7 @@ The frontend runs on `http://localhost:5175` and reads `VITE_API_BASE_URL` from 
 - Customer create/update/delete flow is covered by integration tests.
 - Stock movement creation and negative-stock protection are covered by integration tests.
 - Order fulfillment stock deduction and duplicate-deduction protection are covered by integration tests.
+- Order CSV export is covered by an integration test.
 - Docker Compose starts PostgreSQL and the Spring Boot backend successfully.
 - Dev seed data loads into PostgreSQL on first startup.
 - Swagger UI is reachable from the Dockerized backend.

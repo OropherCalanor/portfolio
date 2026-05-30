@@ -18,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -84,6 +85,22 @@ class OrderControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false));
+    }
+
+    @Test
+    void exportsOrdersAsCsv() throws Exception {
+        Customer customer = customerRepository.save(customer("order.export@example.com"));
+        Product product = productRepository.save(product("ORDER-EXPORT-001", 8));
+        createOrder(customer.getId(), product.getId(), 2);
+
+        mockMvc.perform(get("/api/v1/orders/export.csv"))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String content = result.getResponse().getContentAsString();
+                    assertThat(content).contains("id,orderNumber,status,customer,totalAmount,itemCount,items");
+                    assertThat(content).contains("\"Order Customer\"");
+                    assertThat(content).contains("2x Order Test Product");
+                });
     }
 
     private long createOrder(Long customerId, Long productId, int quantity) throws Exception {

@@ -4,7 +4,9 @@ import com.ruhatkaratas.commercecore.common.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +26,14 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<OrderResponse>>> list() {
         return ResponseEntity.ok(ApiResponse.success("Orders retrieved", orderService.list()));
+    }
+
+    @GetMapping(value = "/export.csv", produces = "text/csv")
+    public ResponseEntity<String> exportCsv() {
+        return ResponseEntity.ok()
+                .contentType(new MediaType("text", "csv"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=commercecore-orders.csv")
+                .body(orderService.exportCsv());
     }
 
     @PostMapping

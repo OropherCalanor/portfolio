@@ -18,6 +18,7 @@ import {
   deleteCategory,
   deleteCustomer,
   deleteProduct,
+  getOrderExportUrl,
   getProductExportUrl,
   loadCommerceCoreData,
   updateCategory,
@@ -546,7 +547,12 @@ function App() {
             onSubmit={handleOrderSubmit}
             products={products}
           />
-          <OrderTable canMutate={canMutate} onStatusChange={handleOrderStatusChange} orders={orders} />
+          <OrderTable
+            canMutate={canMutate}
+            exportUrl={apiState === 'live' ? getOrderExportUrl() : null}
+            onStatusChange={handleOrderStatusChange}
+            orders={orders}
+          />
         </section>
 
         <section className="grid-two" id="stock">
@@ -1105,10 +1111,12 @@ function OrderForm({
 
 function OrderTable({
   canMutate,
+  exportUrl,
   onStatusChange,
   orders,
 }: {
   canMutate: boolean;
+  exportUrl: string | null;
   onStatusChange: (order: OrderResponse, status: OrderStatus) => void;
   orders: OrderResponse[];
 }) {
@@ -1116,7 +1124,14 @@ function OrderTable({
     <article className="panel table-panel">
       <div className="panel-heading">
         <p className="eyebrow">Fulfillment</p>
-        <h3>Orders</h3>
+        <div className="heading-row">
+          <h3>Orders</h3>
+          {exportUrl && (
+            <a className="export-link" download href={exportUrl}>
+              Export CSV
+            </a>
+          )}
+        </div>
       </div>
       <div className="table-wrap">
         <table>

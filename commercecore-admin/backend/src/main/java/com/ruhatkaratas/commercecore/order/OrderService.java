@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,23 @@ public class OrderService {
 
     public List<OrderResponse> list() {
         return orderRepository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    public String exportCsv() {
+        String header = "id,orderNumber,status,customer,totalAmount,itemCount,items";
+        String rows = orderRepository.findAll().stream()
+                .map(order -> String.join(",",
+                        order.getId().toString(),
+                        csv(order.getOrderNumber()),
+                        order.getStatus().name(),
+                        csv(order.getCustomer().getFirstName() + " " + order.getCustomer().getLastName()),
+                        order.getTotalAmount().toPlainString(),
+                        Integer.toString(order.getItems().size()),
+                        csv(itemsSummary(order))
+                ))
+                .collect(Collectors.joining("\n"));
+
+        return rows.isBlank() ? header + "\n" : header + "\n" + rows + "\n";
     }
 
     public OrderResponse create(CreateOrderRequest request) {
@@ -102,5 +120,16 @@ public class OrderService {
                 customer.getFirstName() + " " + customer.getLastName(),
                 items
         );
+    }
+
+    private String itemsSummary(CustomerOrder order) {
+        return order.getItems().stream()
+                .map(item -> item.getQuantity() + "x " + item.getProduct().getName())
+                .collect(Collectors.joining("; "));
+    }
+
+    private String csv(String value) {
+        String escaped = value == null ? "" : value.replace("\"", "\"\"");
+        return "\"" + escaped + "\"";
     }
 }
