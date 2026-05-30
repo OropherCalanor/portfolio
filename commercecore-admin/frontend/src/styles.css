@@ -231,6 +231,23 @@ a {
   margin-bottom: 1rem;
 }
 
+.heading-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.export-link {
+  border: 1px solid rgba(255, 184, 77, 0.36);
+  border-radius: 999px;
+  padding: 0.55rem 0.8rem;
+  color: #ffd48a;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
 .form-panel {
   align-self: start;
 }

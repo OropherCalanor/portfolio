@@ -4,6 +4,7 @@ import com.ruhatkaratas.commercecore.category.Category;
 import com.ruhatkaratas.commercecore.category.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,24 @@ public class ProductService {
 
     public List<ProductResponse> list() {
         return productRepository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    public String exportCsv() {
+        String header = "id,sku,name,category,price,stockQuantity,lowStockThreshold,active";
+        String rows = productRepository.findAll().stream()
+                .map(product -> String.join(",",
+                        product.getId().toString(),
+                        csv(product.getSku()),
+                        csv(product.getName()),
+                        csv(product.getCategory() == null ? "Uncategorized" : product.getCategory().getName()),
+                        product.getPrice().toPlainString(),
+                        Integer.toString(product.getStockQuantity()),
+                        Integer.toString(product.getLowStockThreshold()),
+                        Boolean.toString(product.isActive())
+                ))
+                .collect(Collectors.joining("\n"));
+
+        return rows.isBlank() ? header + "\n" : header + "\n" + rows + "\n";
     }
 
     public ProductResponse create(ProductRequest request) {
@@ -67,5 +86,10 @@ public class ProductService {
                 category == null ? null : category.getId(),
                 category == null ? null : category.getName()
         );
+    }
+
+    private String csv(String value) {
+        String escaped = value == null ? "" : value.replace("\"", "\"\"");
+        return "\"" + escaped + "\"";
     }
 }

@@ -23,10 +23,12 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 - DTO-based category, product, customer, order, and stock movement responses
 - Dashboard summary endpoint
 - Stock movement listing and creation endpoints
+- Product CSV export endpoint
 - Swagger/OpenAPI documentation
 - Docker Compose setup with PostgreSQL
 - Dev seed data for reviewer walkthroughs
 - Product create, edit, and delete UI
+- Product CSV export action
 - Category create, edit, and delete UI
 - Customer create, edit, and delete UI
 - Order create and status update UI
@@ -36,6 +38,7 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 ## API Surface
 
 - `GET /api/v1/products`
+- `GET /api/v1/products/export.csv`
 - `POST /api/v1/products`
 - `PUT /api/v1/products/{id}`
 - `DELETE /api/v1/products/{id}`
@@ -108,6 +111,7 @@ The frontend runs on `http://localhost:5175` and reads `VITE_API_BASE_URL` from 
 
 - Backend test suite passes with H2 test profile.
 - Product create/list/update/delete flow is covered by integration tests.
+- Product CSV export is covered by an integration test.
 - Category create/update/delete flow is covered by an integration test.
 - Customer create/update/delete flow is covered by integration tests.
 - Stock movement creation and negative-stock protection are covered by integration tests.
@@ -136,5 +140,5 @@ Use [screenshots/README.md](./screenshots/README.md) when preparing portfolio im
 
 - screenshots and portfolio case study
 - authentication and admin roles
-- CSV export and richer analytics
+- richer dashboard analytics
 - delivery/shipping workflow after order fulfillment

@@ -3,6 +3,8 @@
 
 # Local editor settings
 .vscode/
+*.swp
+*.swo
 
 # Build outputs
 dist/

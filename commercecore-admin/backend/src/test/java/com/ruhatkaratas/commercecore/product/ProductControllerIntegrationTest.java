@@ -94,6 +94,31 @@ class ProductControllerIntegrationTest {
                 .andExpect(jsonPath("$.success").value(true));
     }
 
+    @Test
+    void exportsProductsAsCsv() throws Exception {
+        long categoryId = createCategory("CSV Category", "csv-category");
+        createProduct(new ProductRequest(
+                "SKU-CSV-001",
+                "CSV Product",
+                "Exportable product",
+                new BigDecimal("15.50"),
+                11,
+                3,
+                true,
+                categoryId
+        ));
+
+        mockMvc.perform(get("/api/v1/products/export.csv"))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String content = result.getResponse().getContentAsString();
+                    org.assertj.core.api.Assertions.assertThat(content).contains("id,sku,name,category,price,stockQuantity,lowStockThreshold,active");
+                    org.assertj.core.api.Assertions.assertThat(content).contains("\"SKU-CSV-001\"");
+                    org.assertj.core.api.Assertions.assertThat(content).contains("\"CSV Product\"");
+                    org.assertj.core.api.Assertions.assertThat(content).contains("\"CSV Category\"");
+                });
+    }
+
     private long createCategory(String name, String slug) throws Exception {
         CategoryRequest categoryRequest = new CategoryRequest(name, slug, "Demo category", true);
         String categoryResponse = mockMvc.perform(post("/api/v1/categories")

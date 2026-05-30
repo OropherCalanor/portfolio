@@ -54,6 +54,10 @@ export function createProduct(request: ProductRequest): Promise<ProductResponse>
   return post<ProductRequest, ProductResponse>('/products', request);
 }
 
+export function getProductExportUrl(): string {
+  return `${API_BASE_URL}/products/export.csv`;
+}
+
 export function createCategory(request: CategoryRequest): Promise<CategoryResponse> {
   return post<CategoryRequest, CategoryResponse>('/categories', request);
 }
