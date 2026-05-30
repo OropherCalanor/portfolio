@@ -25,6 +25,7 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 - Stock movement listing and creation endpoints
 - Product CSV export endpoint
 - Order CSV export endpoint
+- Customer CSV export endpoint
 - Swagger/OpenAPI documentation
 - Docker Compose setup with PostgreSQL
 - Dev seed data for reviewer walkthroughs
@@ -32,6 +33,7 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 - Product CSV export action
 - Category create, edit, and delete UI
 - Customer create, edit, and delete UI
+- Customer CSV export action
 - Order create and status update UI
 - Order CSV export action
 - Stock movement create UI with automatic product inventory refresh
@@ -49,6 +51,7 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 - `PUT /api/v1/categories/{id}`
 - `DELETE /api/v1/categories/{id}`
 - `GET /api/v1/customers`
+- `GET /api/v1/customers/export.csv`
 - `POST /api/v1/customers`
 - `PUT /api/v1/customers/{id}`
 - `DELETE /api/v1/customers/{id}`
@@ -117,6 +120,7 @@ The frontend runs on `http://localhost:5175` and reads `VITE_API_BASE_URL` from 
 - Product CSV export is covered by an integration test.
 - Category create/update/delete flow is covered by an integration test.
 - Customer create/update/delete flow is covered by integration tests.
+- Customer CSV export is covered by an integration test.
 - Stock movement creation and negative-stock protection are covered by integration tests.
 - Order fulfillment stock deduction and duplicate-deduction protection are covered by integration tests.
 - Order CSV export is covered by an integration test.

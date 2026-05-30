@@ -18,6 +18,7 @@ import {
   deleteCategory,
   deleteCustomer,
   deleteProduct,
+  getCustomerExportUrl,
   getOrderExportUrl,
   getProductExportUrl,
   loadCommerceCoreData,
@@ -532,6 +533,7 @@ function App() {
           <CustomerTable
             canMutate={canMutate}
             customers={customers}
+            exportUrl={apiState === 'live' ? getCustomerExportUrl() : null}
             onDelete={handleCustomerDelete}
             onEdit={handleCustomerEdit}
           />
@@ -980,11 +982,13 @@ function CustomerForm({
 function CustomerTable({
   canMutate,
   customers,
+  exportUrl,
   onDelete,
   onEdit,
 }: {
   canMutate: boolean;
   customers: CustomerResponse[];
+  exportUrl: string | null;
   onDelete: (customer: CustomerResponse) => void;
   onEdit: (customer: CustomerResponse) => void;
 }) {
@@ -992,7 +996,14 @@ function CustomerTable({
     <article className="panel table-panel">
       <div className="panel-heading">
         <p className="eyebrow">Accounts</p>
-        <h3>Customers</h3>
+        <div className="heading-row">
+          <h3>Customers</h3>
+          {exportUrl && (
+            <a className="export-link" download href={exportUrl}>
+              Export CSV
+            </a>
+          )}
+        </div>
       </div>
       <div className="table-wrap">
         <table>

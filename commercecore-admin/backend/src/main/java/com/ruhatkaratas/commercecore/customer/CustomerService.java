@@ -2,6 +2,7 @@ package com.ruhatkaratas.commercecore.customer;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,21 @@ public class CustomerService {
 
     public List<CustomerResponse> list() {
         return customerRepository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    public String exportCsv() {
+        String header = "id,firstName,lastName,email,phone";
+        String rows = customerRepository.findAll().stream()
+                .map(customer -> String.join(",",
+                        customer.getId().toString(),
+                        csv(customer.getFirstName()),
+                        csv(customer.getLastName()),
+                        csv(customer.getEmail()),
+                        csv(customer.getPhone())
+                ))
+                .collect(Collectors.joining("\n"));
+
+        return rows.isBlank() ? header + "\n" : header + "\n" + rows + "\n";
     }
 
     public CustomerResponse create(CustomerRequest request) {
@@ -50,5 +66,10 @@ public class CustomerService {
                 customer.getEmail(),
                 customer.getPhone()
         );
+    }
+
+    private String csv(String value) {
+        String escaped = value == null ? "" : value.replace("\"", "\"\"");
+        return "\"" + escaped + "\"";
     }
 }

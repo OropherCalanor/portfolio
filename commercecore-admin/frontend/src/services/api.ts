@@ -90,6 +90,10 @@ export function deleteCustomer(id: number): Promise<void> {
   return del(`/customers/${id}`);
 }
 
+export function getCustomerExportUrl(): string {
+  return `${API_BASE_URL}/customers/export.csv`;
+}
+
 export function createOrder(request: CreateOrderRequest): Promise<OrderResponse> {
   return post<CreateOrderRequest, OrderResponse>('/orders', request);
 }

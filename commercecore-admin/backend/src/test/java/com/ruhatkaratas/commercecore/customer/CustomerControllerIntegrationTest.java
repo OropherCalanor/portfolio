@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -71,6 +72,26 @@ class CustomerControllerIntegrationTest {
         mockMvc.perform(delete("/api/v1/customers/{id}", customerId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    void exportsCustomersAsCsv() throws Exception {
+        createCustomer(new CustomerRequest(
+                "CSV",
+                "Customer",
+                "csv.customer@example.com",
+                "+90 555 010 4040"
+        ));
+
+        mockMvc.perform(get("/api/v1/customers/export.csv"))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String content = result.getResponse().getContentAsString();
+                    org.assertj.core.api.Assertions.assertThat(content).contains("id,firstName,lastName,email,phone");
+                    org.assertj.core.api.Assertions.assertThat(content).contains("\"CSV\"");
+                    org.assertj.core.api.Assertions.assertThat(content).contains("\"Customer\"");
+                    org.assertj.core.api.Assertions.assertThat(content).contains("\"csv.customer@example.com\"");
+                });
     }
 
     private long createCustomer(CustomerRequest request) throws Exception {
