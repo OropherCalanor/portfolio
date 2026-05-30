@@ -1,10 +1,14 @@
 package com.ruhatkaratas.commercecore.stock;
 
 import com.ruhatkaratas.commercecore.common.ApiResponse;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,20 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StockController {
 
-    private final StockMovementRepository stockMovementRepository;
+    private final StockService stockService;
 
     @GetMapping("/movements")
     public ResponseEntity<ApiResponse<List<StockMovementResponse>>> movements() {
-        List<StockMovementResponse> movements = stockMovementRepository.findAll().stream()
-                .map(movement -> new StockMovementResponse(
-                        movement.getId(),
-                        movement.getProduct().getId(),
-                        movement.getProduct().getName(),
-                        movement.getType(),
-                        movement.getQuantity(),
-                        movement.getNote()
-                ))
-                .toList();
-        return ResponseEntity.ok(ApiResponse.success("Stock movements retrieved", movements));
+        return ResponseEntity.ok(ApiResponse.success("Stock movements retrieved", stockService.listMovements()));
+    }
+
+    @PostMapping("/movements")
+    public ResponseEntity<ApiResponse<StockMovementResponse>> createMovement(
+            @Valid @RequestBody StockMovementRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Stock movement created", stockService.createMovement(request)));
     }
 }

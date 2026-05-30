@@ -11,6 +11,7 @@ import type {
   OrderStatus,
   ProductRequest,
   ProductResponse,
+  StockMovementRequest,
   StockMovementResponse,
 } from '../types';
 
@@ -91,6 +92,10 @@ export function createOrder(request: CreateOrderRequest): Promise<OrderResponse>
 
 export function updateOrderStatus(id: number, status: OrderStatus): Promise<OrderResponse> {
   return put<{ status: OrderStatus }, OrderResponse>(`/orders/${id}`, { status });
+}
+
+export function createStockMovement(request: StockMovementRequest): Promise<StockMovementResponse> {
+  return post<StockMovementRequest, StockMovementResponse>('/stock/movements', request);
 }
 
 async function get<T>(path: string): Promise<T> {

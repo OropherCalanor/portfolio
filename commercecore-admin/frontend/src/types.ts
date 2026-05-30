@@ -1,4 +1,5 @@
 export type OrderStatus = 'DRAFT' | 'PAID' | 'FULFILLED' | 'CANCELLED';
+export type StockMovementType = 'IN' | 'OUT' | 'ADJUSTMENT';
 
 export type Kpi = {
   label: string;
@@ -95,9 +96,16 @@ export type StockMovementResponse = {
   id: number;
   productId: number;
   productName: string;
-  type: string;
+  type: StockMovementType;
   quantity: number;
   note: string | null;
+};
+
+export type StockMovementRequest = {
+  productId: number;
+  type: StockMovementType;
+  quantity: number;
+  note: string;
 };
 
 export type DashboardSummaryResponse = {

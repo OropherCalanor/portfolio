@@ -22,7 +22,7 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 - Basic order creation and status update endpoints
 - DTO-based category, product, customer, order, and stock movement responses
 - Dashboard summary endpoint
-- Stock movement listing endpoint
+- Stock movement listing and creation endpoints
 - Swagger/OpenAPI documentation
 - Docker Compose setup with PostgreSQL
 - Dev seed data for reviewer walkthroughs
@@ -30,6 +30,7 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 - Category create, edit, and delete UI
 - Customer create, edit, and delete UI
 - Order create and status update UI
+- Stock movement create UI with automatic product inventory refresh
 - Frontend API client with live API mode, mutation refresh, and demo-data fallback
 
 ## API Surface
@@ -51,6 +52,7 @@ The current milestone includes a Spring Boot backend with service-layer modules,
 - `PUT /api/v1/orders/{id}`
 - `GET /api/v1/dashboard/summary`
 - `GET /api/v1/stock/movements`
+- `POST /api/v1/stock/movements`
 
 ## Project Structure
 
@@ -108,6 +110,7 @@ The frontend runs on `http://localhost:5175` and reads `VITE_API_BASE_URL` from 
 - Product create/list/update/delete flow is covered by integration tests.
 - Category create/update/delete flow is covered by an integration test.
 - Customer create/update/delete flow is covered by integration tests.
+- Stock movement creation and negative-stock protection are covered by integration tests.
 - Docker Compose starts PostgreSQL and the Spring Boot backend successfully.
 - Dev seed data loads into PostgreSQL on first startup.
 - Swagger UI is reachable from the Dockerized backend.
@@ -133,4 +136,4 @@ Use [screenshots/README.md](./screenshots/README.md) when preparing portfolio im
 - screenshots and portfolio case study
 - authentication and admin roles
 - CSV export and richer analytics
-- stock movement creation during order fulfillment
+- automatic stock movement creation during order fulfillment

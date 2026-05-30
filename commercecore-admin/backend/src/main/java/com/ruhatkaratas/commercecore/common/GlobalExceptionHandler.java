@@ -40,4 +40,10 @@ public class GlobalExceptionHandler {
                         LocalDateTime.now()
                 ));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException exception) {
+        return ResponseEntity.badRequest()
+                .body(new ErrorResponse(false, exception.getMessage(), Map.of(), LocalDateTime.now()));
+    }
 }

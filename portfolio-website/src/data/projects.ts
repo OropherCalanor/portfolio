@@ -334,7 +334,7 @@ export const projects: Project[] = [
       'Product, category, and customer CRUD API surface',
       'Order creation and status update API surface',
       'Dashboard summary endpoint',
-      'Stock movement listing endpoint',
+      'Stock movement listing and creation endpoints',
       'Swagger/OpenAPI documentation',
       'Docker Compose setup with PostgreSQL',
       'Seeded demo data for reviewer walkthroughs',
@@ -342,6 +342,7 @@ export const projects: Project[] = [
       'Category create, edit, and delete UI',
       'Customer create, edit, and delete UI',
       'Order create and status update UI',
+      'Stock movement create UI that updates product inventory quantities',
       'React admin workspace with KPI cards, charting, table-first module views, mutation refresh, and live API fallback handling',
     ],
     architecture: [
@@ -356,7 +357,7 @@ export const projects: Project[] = [
       'Products belong to optional categories and track stock, low-stock thresholds, price, SKU, and active state',
       'Customers are modeled separately from orders for repeat-purchase and lifetime-value reporting',
       'Orders contain line items with product references, quantity, unit price, and calculated line totals',
-      'Stock movements are separated so inventory history can grow beyond the current product quantity field',
+      'Stock movements are separated from products so inventory history can grow beyond the current product quantity field',
     ],
     learned: [
       'How to define a business/admin product around operational workflows before adding a storefront',
@@ -370,7 +371,7 @@ export const projects: Project[] = [
       'Add authentication and role-based admin access after the core workflows are stable',
     ],
     verification: [
-      'Backend context-load, product CRUD, category CRUD, and customer CRUD integration tests validate the API slice',
+      'Backend context-load, product CRUD, category CRUD, customer CRUD, and stock movement integration tests validate the API slice',
       'Frontend production build validates the admin UI shell, API client layer, and management forms',
       'Docker Compose configuration is prepared for PostgreSQL-backed local review',
       'Dockerized backend has been smoke-tested against seeded PostgreSQL demo data',
@@ -385,7 +386,7 @@ export const projects: Project[] = [
     futureImprovements: [
       'Add authentication and admin roles',
       'Add CSV export and richer dashboard analytics',
-      'Add stock movement creation during order fulfillment',
+      'Create stock movements automatically during order fulfillment',
       'Deploy a public demo after backend/frontend integration',
     ],
   },

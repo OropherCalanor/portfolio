@@ -103,6 +103,7 @@ export const projectScreenshotManifest: Record<string, ProjectScreenshotManifest
       'orders-create-form.png',
       'orders-status-update.png',
       'stock-movements-table.png',
+      'stock-movement-create-form.png',
       'swagger-overview.png',
     ],
     optional: [

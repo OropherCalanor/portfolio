@@ -14,6 +14,7 @@ import {
   createCustomer,
   createOrder,
   createProduct,
+  createStockMovement,
   deleteCategory,
   deleteCustomer,
   deleteProduct,
@@ -33,6 +34,7 @@ import type {
   ProductRequest,
   ProductResponse,
   StockMovementResponse,
+  StockMovementType,
 } from './types';
 
 type ApiState = 'loading' | 'live' | 'fallback';
@@ -68,6 +70,13 @@ type OrderFormState = {
   quantity: string;
 };
 
+type StockMovementFormState = {
+  productId: string;
+  type: StockMovementType;
+  quantity: string;
+  note: string;
+};
+
 const EMPTY_PRODUCT_FORM: ProductFormState = {
   sku: '',
   name: '',
@@ -99,7 +108,15 @@ const EMPTY_ORDER_FORM: OrderFormState = {
   quantity: '1',
 };
 
+const EMPTY_STOCK_MOVEMENT_FORM: StockMovementFormState = {
+  productId: '',
+  type: 'IN',
+  quantity: '1',
+  note: '',
+};
+
 const ORDER_STATUSES: OrderStatus[] = ['DRAFT', 'PAID', 'FULFILLED', 'CANCELLED'];
+const STOCK_MOVEMENT_TYPES: StockMovementType[] = ['IN', 'OUT', 'ADJUSTMENT'];
 
 function App() {
   const [dashboardData, setDashboardData] = useState<AdminDashboardData>(demoData);
@@ -113,6 +130,7 @@ function App() {
   const [categoryForm, setCategoryForm] = useState<CategoryFormState>(EMPTY_CATEGORY_FORM);
   const [customerForm, setCustomerForm] = useState<CustomerFormState>(EMPTY_CUSTOMER_FORM);
   const [orderForm, setOrderForm] = useState<OrderFormState>(EMPTY_ORDER_FORM);
+  const [stockMovementForm, setStockMovementForm] = useState<StockMovementFormState>(EMPTY_STOCK_MOVEMENT_FORM);
 
   useEffect(() => {
     let shouldUpdate = true;
@@ -354,6 +372,31 @@ function App() {
     }
   };
 
+  const handleStockMovementSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!canMutate) {
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      await createStockMovement({
+        productId: Number(stockMovementForm.productId),
+        type: stockMovementForm.type,
+        quantity: Number(stockMovementForm.quantity),
+        note: stockMovementForm.note,
+      });
+      setStockMovementForm(EMPTY_STOCK_MOVEMENT_FORM);
+      setNotice('Stock movement recorded and inventory refreshed.');
+      await refreshDashboard();
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Stock movement failed.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <main className="app-shell">
       <aside className="sidebar">
@@ -504,7 +547,17 @@ function App() {
           <OrderTable canMutate={canMutate} onStatusChange={handleOrderStatusChange} orders={orders} />
         </section>
 
-        <StockTable movements={stockMovements} />
+        <section className="grid-two" id="stock">
+          <StockMovementForm
+            canMutate={canMutate}
+            form={stockMovementForm}
+            isSaving={isSaving}
+            onChange={setStockMovementForm}
+            onSubmit={handleStockMovementSubmit}
+            products={products}
+          />
+          <StockTable movements={stockMovements} />
+        </section>
       </section>
     </main>
   );
@@ -1095,11 +1148,92 @@ function OrderTable({
   );
 }
 
+function StockMovementForm({
+  canMutate,
+  form,
+  isSaving,
+  onChange,
+  onSubmit,
+  products,
+}: {
+  canMutate: boolean;
+  form: StockMovementFormState;
+  isSaving: boolean;
+  onChange: (value: StockMovementFormState) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  products: ProductResponse[];
+}) {
+  return (
+    <article className="panel form-panel">
+      <div className="panel-heading">
+        <p className="eyebrow">Inventory control</p>
+        <h3>Record stock movement</h3>
+      </div>
+      <form className="form-grid" onSubmit={onSubmit}>
+        <label>
+          Product
+          <select
+            disabled={!canMutate}
+            onChange={(event) => onChange({ ...form, productId: event.target.value })}
+            required
+            value={form.productId}
+          >
+            <option value="">Select product</option>
+            {products.map((product) => (
+              <option key={product.id} value={product.id}>
+                {product.name} ({product.stockQuantity} in stock)
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Movement type
+          <select
+            disabled={!canMutate}
+            onChange={(event) => onChange({ ...form, type: event.target.value as StockMovementType })}
+            value={form.type}
+          >
+            {STOCK_MOVEMENT_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {formatStockMovementType(type)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Quantity
+          <input
+            disabled={!canMutate}
+            onChange={(event) => onChange({ ...form, quantity: event.target.value })}
+            required
+            type="number"
+            value={form.quantity}
+          />
+        </label>
+        <label className="span-two">
+          Note
+          <textarea
+            disabled={!canMutate}
+            onChange={(event) => onChange({ ...form, note: event.target.value })}
+            placeholder="Supplier restock, inventory audit, damaged stock..."
+            value={form.note}
+          />
+        </label>
+        <div className="form-actions span-two">
+          <button disabled={!canMutate} type="submit">
+            {isSaving ? 'Saving...' : 'Record movement'}
+          </button>
+        </div>
+      </form>
+    </article>
+  );
+}
+
 function StockTable({ movements }: { movements: StockMovementResponse[] }) {
   return (
-    <article className="panel table-panel" id="stock">
+    <article className="panel table-panel">
       <div className="panel-heading">
-        <p className="eyebrow">Read-only audit</p>
+        <p className="eyebrow">Inventory audit</p>
         <h3>Stock movements</h3>
       </div>
       <div className="table-wrap">
@@ -1116,7 +1250,7 @@ function StockTable({ movements }: { movements: StockMovementResponse[] }) {
             {movements.map((movement) => (
               <tr key={movement.id}>
                 <td>{movement.productName}</td>
-                <td><span className="badge badge-muted">{movement.type}</span></td>
+                <td><span className={`badge badge-${getMovementTone(movement.type)}`}>{movement.type}</span></td>
                 <td>{movement.quantity}</td>
                 <td>{movement.note ?? 'No note'}</td>
               </tr>
@@ -1193,6 +1327,22 @@ function formatStatus(value: OrderStatus): string {
     .split('_')
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(' ');
+}
+
+function formatStockMovementType(value: StockMovementType): string {
+  return value === 'IN' ? 'Stock in' : value === 'OUT' ? 'Stock out' : 'Adjustment';
+}
+
+function getMovementTone(value: StockMovementType): string {
+  if (value === 'IN') {
+    return 'success';
+  }
+
+  if (value === 'OUT') {
+    return 'warning';
+  }
+
+  return 'muted';
 }
 
 export default App;
